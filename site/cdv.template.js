@@ -7,8 +7,11 @@
   var IMG = BASE + 'img/';
   var WA = '573225911307';
   var IG = 'https://www.instagram.com/cielo.develas';
-  var PRODUCTS = __PRODUCTS__;
-  var TOP = ['6-deseos', 'sagrada-familia', 'ella', 'peonia'];
+  // Datos en vivo: pestaña "Web" de la hoja Cielo_de_Velas_-_Ventas_y_Gastos (Apps Script, archivo Web.gs).
+  var FEED = '__FEED__';
+  // Copia de respaldo por si la hoja no responde.
+  var FALLBACK = __PRODUCTS__;
+  var CACHE_KEY = 'cdv_catalogo_v1';
 
   var COLS = [
     { id: 'navidad', name: 'Navidad' },
@@ -19,12 +22,33 @@
     { id: 'flores', name: 'Flores' },
     { id: 'osos', name: 'Osos cariñosos' },
     { id: 'otros', name: 'Otros' },
-    { id: 'halloween', name: 'Halloween', until: '2026-11-02' }
+    { id: 'halloween', name: 'Halloween', until: '2026-11-02' },
+    { id: 'easter', name: 'Happy Easter' }
   ];
   var today = new Date().toISOString().slice(0, 10);
   COLS = COLS.filter(function (c) { return !c.until || today < c.until; });
   var activeIds = COLS.map(function (c) { return c.id; });
-  PRODUCTS = PRODUCTS.filter(function (p) { return activeIds.indexOf(p.c) > -1; });
+  var COLMAP = {};
+  COLS.forEach(function (c) { COLMAP[norm(c.name)] = c.id; });
+
+  function imgUrl(f) {
+    f = String(f || '').trim();
+    if (!f) return IMG + 'logo.png';
+    var m = f.match(/\/d\/([\w-]{20,})/) || f.match(/[?&]id=([\w-]{20,})/);
+    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w800';
+    if (/^https?:\/\//i.test(f)) return f;
+    return IMG + f.replace(/\.(jpe?g|png|webp)$/i, '') + '.jpg';
+  }
+  function normalize(items) {
+    return (items || []).map(function (i) {
+      return { n: String(i.n), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d };
+    }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
+  }
+  var PRODUCTS = normalize(FALLBACK);
+  try {
+    var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && cached.items && cached.items.length) PRODUCTS = normalize(cached.items);
+  } catch (e) {}
 
   var COLORS = [
     ['Blanco', '#FFFFFF'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
@@ -41,8 +65,6 @@
   var GENERAL = waLink('Hola Cielo de Velas, quiero hacer un pedido.');
   var GIFTS = waLink('Hola Cielo de Velas, quiero cotizar regalos navideños. Cantidad aproximada: ');
   var EVENTS = waLink('Hola Cielo de Velas, quiero cotizar velas para un evento. Tipo de evento y fecha: ');
-  var bySlug = {};
-  PRODUCTS.forEach(function (p) { bySlug[p.s] = p; });
 
   var ICON_WA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>';
   var ICON_IG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>';
@@ -146,15 +168,19 @@
   ].join('\n');
 
   function card(p) {
-    var top = TOP.indexOf(p.s) > -1 ? '<span class="tag">Más vendida</span>' : '';
+    var top = p.top ? '<span class="tag">Más vendida</span>' : '';
     return '<article class="card">' +
-      '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + IMG + p.s + '.jpg" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
+      '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
       '<div class="meta"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></div>' +
       '<a class="btn btn-wine" href="' + orderLink(p) + '" target="_blank" rel="noopener">' + ICON_WA + '<span class="lg">Pedir por WhatsApp</span><span class="sm">Pedir</span></a>' +
       '</article>';
   }
 
-  var featured = ['6-deseos', 'arbol-bolitas', 'gnomo', 'reno-3d'].map(function (s) { return bySlug[s]; }).filter(Boolean);
+  function featured() {
+    var f = PRODUCTS.filter(function (p) { return p.feat; });
+    if (!f.length) f = PRODUCTS.filter(function (p) { return p.c === 'navidad'; });
+    return f.slice(0, 4);
+  }
 
   var html =
     '<div class="topbar">Pedidos navideños abiertos · Separa tus regalos por WhatsApp</div>' +
@@ -172,10 +198,10 @@
     '<div class="chips"><span class="chip">Hechas a mano</span><span class="chip">Materias primas naturales</span><span class="chip">Libres de tóxicos</span><span class="chip">Sostenibles</span></div>' +
     '<section class="block" style="padding-top:24px"><div class="wrap">' +
       '<div class="head"><div><span class="script">Temporada navideña</span><h2>Las favoritas de la temporada</h2></div><a class="btn btn-dark" href="#catalogo" data-col="navidad">Ver toda la Navidad</a></div>' +
-      '<div class="grid">' + featured.map(card).join('') + '</div>' +
+      '<div class="grid" id="cdv-feat">' + featured().map(card).join('') + '</div>' +
     '</div></section>' +
     '<section id="catalogo" class="block" style="background:#fff;border-top:1px solid #EFE0CF;border-bottom:1px solid #EFE0CF"><div class="wrap">' +
-      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub">' + PRODUCTS.length + ' diseños hechos a mano. Todos disponibles en 9 colores: nos dices cuál al pedir.</p></div></div>' +
+      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub"><span id="cdv-total">' + PRODUCTS.length + '</span> diseños hechos a mano. Todos disponibles en 9 colores: nos dices cuál al pedir.</p></div></div>' +
       '<div class="tools"><div class="tabs" role="group" aria-label="Colecciones"></div>' +
       '<label class="search"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar una vela</span>' + ICON_SEARCH + '<input type="search" placeholder="Buscar: reno, ángel, peonía..." autocomplete="off"></label></div>' +
       '<p class="count" aria-live="polite"></p><div class="grid" id="cdv-grid"></div>' +
@@ -192,8 +218,8 @@
       '<p>Bodas, baby showers, cumpleaños, primeras comuniones y grados. Elige el diseño, el color y la cantidad.</p>' +
       '<ul class="ticks"><li>Pedidos por cantidad para tu evento</li><li>Colores a juego con tu decoración</li><li>Precios especiales por mayor</li></ul>' +
       '<a class="btn btn-wine" href="' + EVENTS + '" target="_blank" rel="noopener">Cotizar mi evento</a></div>' +
-      '<div class="mosaic">' + ['boda-corazon', 'baby-shower', 'numeros', 'pareja', 'zapatico-bebe', 'primera-comunion'].map(function (s) {
-        var p = bySlug[s]; return p ? '<img loading="lazy" src="' + IMG + s + '.jpg" alt="Vela ' + esc(p.n) + '">' : '';
+      '<div class="mosaic">' + [['boda-corazon', 'Boda Corazón'], ['baby-shower', 'Baby Shower'], ['numeros', 'Números'], ['pareja', 'Pareja'], ['zapatico-bebe', 'Zapatico Bebé'], ['primera-comunion', 'Primera Comunión']].map(function (m) {
+        return '<img loading="lazy" src="' + IMG + m[0] + '.jpg" alt="Vela ' + m[1] + '">';
       }).join('') + '</div>' +
     '</div></section>' +
     '<section class="block"><div class="wrap center"><p class="script" style="font-size:36px;color:var(--wine)">Colores disponibles</p><h2 style="font-size:clamp(30px,4vw,44px)">Elige tu color favorito</h2>' +
@@ -225,7 +251,10 @@
 
   function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function renderTabs() {
-    var all = [{ id: 'todas', name: 'Todas' }].concat(COLS);
+    var used = {};
+    PRODUCTS.forEach(function (p) { used[p.c] = true; });
+    if (state.col !== 'todas' && !used[state.col]) state.col = 'todas';
+    var all = [{ id: 'todas', name: 'Todas' }].concat(COLS.filter(function (c) { return used[c.id]; }));
     tabsEl.innerHTML = all.map(function (c) {
       return '<button type="button" class="tab" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + c.name + '</button>';
     }).join('');
@@ -251,4 +280,26 @@
     if (a) setCol(a.getAttribute('data-col'));
   });
   renderTabs(); renderGrid();
+
+  function applyFeed(items) {
+    var next = normalize(items);
+    if (!next.length) return;
+    PRODUCTS = next;
+    ROOT.querySelector('#cdv-feat').innerHTML = featured().map(card).join('');
+    ROOT.querySelector('#cdv-total').textContent = PRODUCTS.length;
+    renderTabs(); renderGrid();
+  }
+  if (FEED.indexOf('http') === 0 && window.fetch) {
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
+    fetch(FEED, { credentials: 'omit', signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        clearTimeout(timer);
+        if (!d || !d.items) return;
+        applyFeed(d.items);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
+      })
+      .catch(function () { clearTimeout(timer); });
+  }
 })();

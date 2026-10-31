@@ -4,7 +4,7 @@ Fotos y código del catálogo de **cielodevelas.com** (sitio en Carrd).
 
 - `img/` fotos de producto (640×800, 4:5), logo e imágenes de portada
 - `site/cdv.js` script que dibuja el sitio dentro del bloque Embed de Carrd
-- `site/products.json` productos y precios (fuente: hoja *Cielo_de_Velas_-_Ventas_y_Gastos*, pestaña Catálogo)
+- `site/products.json` copia de respaldo del catálogo (los datos en vivo salen de la pestaña *Web* de la hoja *Cielo_de_Velas_-_Ventas_y_Gastos*, vía Apps Script `Web.gs`)
 
 Código del Embed en Carrd (COMMIT = commit de la versión publicada):
 

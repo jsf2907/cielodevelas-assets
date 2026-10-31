@@ -7,8 +7,11 @@
   var IMG = BASE + 'img/';
   var WA = '573225911307';
   var IG = 'https://www.instagram.com/cielo.develas';
-  var PRODUCTS = [{"s":"ondulada","n":"Ondulada","c":"arte","p":21000,"v":11},{"s":"torre-romana","n":"Torre Romana","c":"arte","p":43000,"v":0},{"s":"waves","n":"Waves","c":"arte","p":30000,"v":0},{"s":"infinito","n":"Infinito","c":"arte","p":60000,"v":0},{"s":"nosotros","n":"Nosotros","c":"arte","p":39000,"v":0},{"s":"cubo-burbuja-l","n":"Cubo Burbuja L","c":"arte","p":68000,"v":0},{"s":"cubo-burbuja-xl","n":"Cubo Burbuja XL","c":"arte","p":85000,"v":0},{"s":"cilindro-tallado-grande","n":"Cilindro Tallado Grande","c":"arte","p":50000,"v":1},{"s":"trenza","n":"Trenza","c":"arte","p":24000,"v":1},{"s":"doble-u","n":"Doble U","c":"arte","p":32000,"v":3},{"s":"cilindro-ese","n":"Cilindro Ese","c":"arte","p":25000,"v":12},{"s":"muse-30","n":"Musé 30","c":"arte","p":23000,"v":0},{"s":"cilindro-lluvia","n":"Cilindro Lluvia","c":"arte","p":54000,"v":3},{"s":"rayas-delgado","n":"Rayas Delgado","c":"arte","p":20000,"v":0},{"s":"rayas-grueso","n":"Rayas Grueso","c":"arte","p":27000,"v":0},{"s":"aura","n":"Aura","c":"arte","p":50000,"v":0},{"s":"arcoiris-m","n":"Arcoíris M","c":"arte","p":39000,"v":0},{"s":"arcoiris-l","n":"Arcoíris L","c":"arte","p":74000,"v":0},{"s":"twins","n":"Twins","c":"arte","p":55000,"v":1},{"s":"set-matisse","n":"Set Matisse","c":"arte","p":64000,"v":0},{"s":"david","n":"David","c":"arte","p":21000,"v":0},{"s":"el","n":"Él","c":"arte","p":27000,"v":0},{"s":"ella","n":"Ella","c":"arte","p":25000,"v":30},{"s":"sagrada-familia","n":"Sagrada Familia","c":"creencias","p":25000,"v":39},{"s":"jesus","n":"Jesús","c":"creencias","p":23000,"v":6},{"s":"cristo","n":"Cristo","c":"creencias","p":49000,"v":0},{"s":"buda","n":"Buda","c":"creencias","p":30000,"v":2},{"s":"manos-bondadosas","n":"Manos Bondadosas","c":"creencias","p":20000,"v":0},{"s":"mama","n":"Mamá","c":"creencias","p":30000,"v":0},{"s":"virgencita","n":"Virgencita","c":"creencias","p":22000,"v":0},{"s":"virgen-maria","n":"Virgen María","c":"creencias","p":22000,"v":8},{"s":"angel-geometrico","n":"Ángel Geométrico","c":"creencias","p":18000,"v":0},{"s":"angel-corazon","n":"Ángel Corazón","c":"creencias","p":22000,"v":0},{"s":"angel-dormido","n":"Ángel Dormido","c":"creencias","p":29000,"v":0},{"s":"pequeno-angel","n":"Pequeño Ángel","c":"creencias","p":9000,"v":0},{"s":"querubin","n":"Querubín","c":"creencias","p":17000,"v":0},{"s":"sol-y-luna","n":"Sol y Luna","c":"creencias","p":18000,"v":0},{"s":"gemelos","n":"Gemelos","c":"creencias","p":17000,"v":0},{"s":"cera-de-abeja","n":"Cera de Abeja","c":"creencias","p":10000,"v":0},{"s":"primera-comunion","n":"Primera Comunión","c":"creencias","p":20000,"v":0},{"s":"cisne","n":"Cisne","c":"animalitos","p":24000,"v":0},{"s":"pato","n":"Pato","c":"animalitos","p":23000,"v":0},{"s":"oveja","n":"Oveja","c":"animalitos","p":39000,"v":0},{"s":"caballito-de-mar","n":"Caballito de Mar","c":"animalitos","p":20000,"v":0},{"s":"perrito-y-gatico-cielo","n":"Perrito y Gatico Cielo","c":"animalitos","p":27000,"v":1},{"s":"gato-sentado","n":"Gato Sentado","c":"animalitos","p":23000,"v":1},{"s":"elefante-bebe","n":"Elefante Bebé","c":"animalitos","p":21000,"v":0},{"s":"cat-majesty","n":"Cat Majesty","c":"animalitos","p":31000,"v":0},{"s":"mariposa","n":"Mariposa","c":"animalitos","p":19000,"v":0},{"s":"conejito","n":"Conejito","c":"animalitos","p":21000,"v":0},{"s":"pomerania","n":"Pomerania","c":"animalitos","p":24000,"v":5},{"s":"bulldog","n":"Bulldog","c":"animalitos","p":17000,"v":0},{"s":"lobo","n":"Lobo","c":"animalitos","p":78000,"v":0},{"s":"perrito","n":"Perrito","c":"animalitos","p":29000,"v":0},{"s":"monito","n":"Monito","c":"animalitos","p":19000,"v":0},{"s":"cerdito","n":"Cerdito","c":"animalitos","p":25000,"v":0},{"s":"llama","n":"Llama","c":"animalitos","p":20000,"v":0},{"s":"labrador","n":"Labrador","c":"animalitos","p":28000,"v":0},{"s":"ardilla","n":"Ardilla","c":"animalitos","p":26000,"v":0},{"s":"leon","n":"León","c":"animalitos","p":35000,"v":1},{"s":"delfin","n":"Delfín","c":"animalitos","p":22000,"v":0},{"s":"huella","n":"Huella","c":"animalitos","p":25000,"v":0},{"s":"caballo","n":"Caballo","c":"animalitos","p":22000,"v":0},{"s":"papa-noel","n":"Papá Noel","c":"navidad","p":31000,"v":0},{"s":"dulce-navidad","n":"Dulce Navidad","c":"navidad","p":24000,"v":0},{"s":"arbolito","n":"Arbolito","c":"navidad","p":23000,"v":1},{"s":"arbol-cilindro","n":"Árbol Cilindro","c":"navidad","p":25000,"v":0},{"s":"arbol-bolitas","n":"Árbol Bolitas","c":"navidad","p":22000,"v":0},{"s":"gnomo","n":"Gnomo","c":"navidad","p":26000,"v":0},{"s":"copito-de-nieve","n":"Copito de Nieve","c":"navidad","p":20000,"v":5},{"s":"muneco-de-nieve","n":"Muñeco de Nieve","c":"navidad","p":28000,"v":0},{"s":"pina","n":"Piña","c":"navidad","p":27000,"v":0},{"s":"reno-3d","n":"Reno 3D","c":"navidad","p":31000,"v":0},{"s":"candle-christmas","n":"Candle Christmas","c":"navidad","p":40000,"v":0},{"s":"cascanueces","n":"Cascanueces","c":"navidad","p":26000,"v":0},{"s":"reno","n":"Reno","c":"navidad","p":21000,"v":0},{"s":"6-deseos","n":"6 Deseos","c":"navidad","p":50000,"v":91},{"s":"casita-navidena","n":"Casita Navideña","c":"navidad","p":25000,"v":0},{"s":"velitas-santa-x6","n":"Velitas Santa x6","c":"navidad","p":41000,"v":0},{"s":"calabaza","n":"Calabaza","c":"halloween","p":22000,"v":0},{"s":"calavera","n":"Calavera","c":"halloween","p":25000,"v":0},{"s":"fantasma-boo","n":"Fantasma Boo","c":"halloween","p":29000,"v":0},{"s":"oso-corazon","n":"Oso Corazón","c":"osos","p":46000,"v":2},{"s":"oso-bebe","n":"Oso Bebé","c":"osos","p":28000,"v":0},{"s":"teddy-mini","n":"Teddy Mini","c":"osos","p":9000,"v":0},{"s":"oso-mono","n":"Oso Moño","c":"osos","p":31000,"v":0},{"s":"osito-flotador","n":"Osito Flotador","c":"osos","p":25000,"v":0},{"s":"oso-musculoso","n":"Oso Musculoso","c":"osos","p":26000,"v":0},{"s":"boda-corazon","n":"Boda Corazón","c":"celebraciones","p":19000,"v":0},{"s":"pareja","n":"Pareja","c":"celebraciones","p":27000,"v":2},{"s":"sweet-heart","n":"Sweet Heart","c":"celebraciones","p":37000,"v":12},{"s":"home","n":"Home","c":"celebraciones","p":40000,"v":1},{"s":"5-corazones","n":"5 Corazones","c":"celebraciones","p":24000,"v":4},{"s":"baby-shower","n":"Baby Shower","c":"celebraciones","p":20000,"v":0},{"s":"carrusel","n":"Carrusel","c":"celebraciones","p":26000,"v":1},{"s":"nube","n":"Nube","c":"celebraciones","p":19000,"v":0},{"s":"zapatico-bebe","n":"Zapatico Bebé","c":"celebraciones","p":20000,"v":0},{"s":"carrito","n":"Carrito","c":"celebraciones","p":27000,"v":0},{"s":"muela","n":"Muela","c":"celebraciones","p":28000,"v":8},{"s":"numeros","n":"Números","c":"celebraciones","p":16000,"v":0},{"s":"torta","n":"Torta","c":"celebraciones","p":29000,"v":4},{"s":"libritos","n":"Libritos","c":"celebraciones","p":25000,"v":0},{"s":"medico","n":"Médico","c":"celebraciones","p":37000,"v":0},{"s":"lego","n":"Lego","c":"celebraciones","p":21000,"v":3},{"s":"astronauta","n":"Astronauta","c":"celebraciones","p":22000,"v":0},{"s":"corazon-anatomico","n":"Corazón Anatómico","c":"celebraciones","p":27000,"v":1},{"s":"peonia-xl","n":"Peonía XL","c":"flores","p":60000,"v":11},{"s":"rosa-3d","n":"Rosa 3D","c":"flores","p":38000,"v":0},{"s":"peonia","n":"Peonía","c":"flores","p":21000,"v":25},{"s":"tulipan","n":"Tulipán","c":"flores","p":30000,"v":4},{"s":"ramo-de-flores","n":"Ramo de Flores","c":"flores","p":38000,"v":0},{"s":"circulo-de-rosas-g","n":"Círculo de Rosas G","c":"flores","p":45000,"v":1},{"s":"circulo-de-rosas-p","n":"Círculo de Rosas P","c":"flores","p":12000,"v":1},{"s":"recipiente-aromatico","n":"Recipiente Aromático","c":"flores","p":65000,"v":8},{"s":"macarrones-x4","n":"Macarrones x4","c":"otros","p":28000,"v":0},{"s":"huevito","n":"Huevito","c":"otros","p":20000,"v":0},{"s":"croissant","n":"Croissant","c":"otros","p":23000,"v":0},{"s":"helado","n":"Helado","c":"otros","p":29000,"v":0},{"s":"dolares","n":"Dólares","c":"otros","p":25000,"v":0},{"s":"dinero","n":"Dinero","c":"otros","p":31000,"v":1}];
-  var TOP = ['6-deseos', 'sagrada-familia', 'ella', 'peonia'];
+  // Datos en vivo: pestaña "Web" de la hoja Cielo_de_Velas_-_Ventas_y_Gastos (Apps Script, archivo Web.gs).
+  var FEED = 'https://script.google.com/macros/s/AKfycbzI6w4KqoWFt6ZVrCg9TTOMEUcBpCWJFHZiKHO3z69z52catv57n7dq4bhmksfz4ljBAg/exec';
+  // Copia de respaldo por si la hoja no responde.
+  var FALLBACK = [{"n":"Papá Noel","c":"Navidad","p":31000,"f":"papa-noel","t":false,"d":false},{"n":"Dulce Navidad","c":"Navidad","p":24000,"f":"dulce-navidad","t":false,"d":false},{"n":"Arbolito","c":"Navidad","p":23000,"f":"arbolito","t":false,"d":false},{"n":"Árbol Cilindro","c":"Navidad","p":25000,"f":"arbol-cilindro","t":false,"d":false},{"n":"Árbol Bolitas","c":"Navidad","p":22000,"f":"arbol-bolitas","t":false,"d":true},{"n":"Gnomo","c":"Navidad","p":26000,"f":"gnomo","t":false,"d":true},{"n":"Copito de Nieve","c":"Navidad","p":20000,"f":"copito-de-nieve","t":false,"d":false},{"n":"Muñeco de Nieve","c":"Navidad","p":28000,"f":"muneco-de-nieve","t":false,"d":false},{"n":"Piña","c":"Navidad","p":27000,"f":"pina","t":false,"d":false},{"n":"Reno 3D","c":"Navidad","p":31000,"f":"reno-3d","t":false,"d":true},{"n":"Candle Christmas","c":"Navidad","p":40000,"f":"candle-christmas","t":false,"d":false},{"n":"Cascanueces","c":"Navidad","p":26000,"f":"cascanueces","t":false,"d":false},{"n":"Reno","c":"Navidad","p":21000,"f":"reno","t":false,"d":false},{"n":"6 Deseos","c":"Navidad","p":50000,"f":"6-deseos","t":true,"d":true},{"n":"Casita Navideña","c":"Navidad","p":25000,"f":"casita-navidena","t":false,"d":false},{"n":"Velitas Santa x6","c":"Navidad","p":41000,"f":"velitas-santa-x6","t":false,"d":false},{"n":"Ondulada","c":"Arte y diseño","p":21000,"f":"ondulada","t":false,"d":false},{"n":"Torre Romana","c":"Arte y diseño","p":43000,"f":"torre-romana","t":false,"d":false},{"n":"Waves","c":"Arte y diseño","p":30000,"f":"waves","t":false,"d":false},{"n":"Infinito","c":"Arte y diseño","p":60000,"f":"infinito","t":false,"d":false},{"n":"Nosotros","c":"Arte y diseño","p":39000,"f":"nosotros","t":false,"d":false},{"n":"Cubo Burbuja L","c":"Arte y diseño","p":68000,"f":"cubo-burbuja-l","t":false,"d":false},{"n":"Cubo Burbuja XL","c":"Arte y diseño","p":85000,"f":"cubo-burbuja-xl","t":false,"d":false},{"n":"Cilindro Tallado Grande","c":"Arte y diseño","p":50000,"f":"cilindro-tallado-grande","t":false,"d":false},{"n":"Trenza","c":"Arte y diseño","p":24000,"f":"trenza","t":false,"d":false},{"n":"Doble U","c":"Arte y diseño","p":32000,"f":"doble-u","t":false,"d":false},{"n":"Cilindro Ese","c":"Arte y diseño","p":25000,"f":"cilindro-ese","t":false,"d":false},{"n":"Musé 30","c":"Arte y diseño","p":23000,"f":"muse-30","t":false,"d":false},{"n":"Cilindro Lluvia","c":"Arte y diseño","p":54000,"f":"cilindro-lluvia","t":false,"d":false},{"n":"Rayas Delgado","c":"Arte y diseño","p":20000,"f":"rayas-delgado","t":false,"d":false},{"n":"Rayas Grueso","c":"Arte y diseño","p":27000,"f":"rayas-grueso","t":false,"d":false},{"n":"Aura","c":"Arte y diseño","p":50000,"f":"aura","t":false,"d":false},{"n":"Arcoíris M","c":"Arte y diseño","p":39000,"f":"arcoiris-m","t":false,"d":false},{"n":"Arcoíris L","c":"Arte y diseño","p":74000,"f":"arcoiris-l","t":false,"d":false},{"n":"Twins","c":"Arte y diseño","p":55000,"f":"twins","t":false,"d":false},{"n":"Set Matisse","c":"Arte y diseño","p":64000,"f":"set-matisse","t":false,"d":false},{"n":"David","c":"Arte y diseño","p":21000,"f":"david","t":false,"d":false},{"n":"Él","c":"Arte y diseño","p":27000,"f":"el","t":false,"d":false},{"n":"Ella","c":"Arte y diseño","p":25000,"f":"ella","t":true,"d":false},{"n":"Boda Corazón","c":"Celebraciones","p":19000,"f":"boda-corazon","t":false,"d":false},{"n":"Pareja","c":"Celebraciones","p":27000,"f":"pareja","t":false,"d":false},{"n":"Sweet Heart","c":"Celebraciones","p":37000,"f":"sweet-heart","t":false,"d":false},{"n":"Home","c":"Celebraciones","p":40000,"f":"home","t":false,"d":false},{"n":"5 Corazones","c":"Celebraciones","p":24000,"f":"5-corazones","t":false,"d":false},{"n":"Baby Shower","c":"Celebraciones","p":20000,"f":"baby-shower","t":false,"d":false},{"n":"Carrusel","c":"Celebraciones","p":26000,"f":"carrusel","t":false,"d":false},{"n":"Nube","c":"Celebraciones","p":19000,"f":"nube","t":false,"d":false},{"n":"Zapatico Bebé","c":"Celebraciones","p":20000,"f":"zapatico-bebe","t":false,"d":false},{"n":"Carrito","c":"Celebraciones","p":27000,"f":"carrito","t":false,"d":false},{"n":"Muela","c":"Celebraciones","p":28000,"f":"muela","t":false,"d":false},{"n":"Números","c":"Celebraciones","p":16000,"f":"numeros","t":false,"d":false},{"n":"Torta","c":"Celebraciones","p":29000,"f":"torta","t":false,"d":false},{"n":"Libritos","c":"Celebraciones","p":25000,"f":"libritos","t":false,"d":false},{"n":"Médico","c":"Celebraciones","p":37000,"f":"medico","t":false,"d":false},{"n":"Lego","c":"Celebraciones","p":21000,"f":"lego","t":false,"d":false},{"n":"Astronauta","c":"Celebraciones","p":22000,"f":"astronauta","t":false,"d":false},{"n":"Corazón Anatómico","c":"Celebraciones","p":27000,"f":"corazon-anatomico","t":false,"d":false},{"n":"Sagrada Familia","c":"Creencias","p":25000,"f":"sagrada-familia","t":true,"d":false},{"n":"Jesús","c":"Creencias","p":23000,"f":"jesus","t":false,"d":false},{"n":"Cristo","c":"Creencias","p":49000,"f":"cristo","t":false,"d":false},{"n":"Buda","c":"Creencias","p":30000,"f":"buda","t":false,"d":false},{"n":"Manos Bondadosas","c":"Creencias","p":20000,"f":"manos-bondadosas","t":false,"d":false},{"n":"Mamá","c":"Creencias","p":30000,"f":"mama","t":false,"d":false},{"n":"Virgencita","c":"Creencias","p":22000,"f":"virgencita","t":false,"d":false},{"n":"Virgen María","c":"Creencias","p":22000,"f":"virgen-maria","t":false,"d":false},{"n":"Ángel Geométrico","c":"Creencias","p":18000,"f":"angel-geometrico","t":false,"d":false},{"n":"Ángel Corazón","c":"Creencias","p":22000,"f":"angel-corazon","t":false,"d":false},{"n":"Ángel Dormido","c":"Creencias","p":29000,"f":"angel-dormido","t":false,"d":false},{"n":"Pequeño Ángel","c":"Creencias","p":9000,"f":"pequeno-angel","t":false,"d":false},{"n":"Querubín","c":"Creencias","p":17000,"f":"querubin","t":false,"d":false},{"n":"Sol y Luna","c":"Creencias","p":18000,"f":"sol-y-luna","t":false,"d":false},{"n":"Gemelos","c":"Creencias","p":17000,"f":"gemelos","t":false,"d":false},{"n":"Cera de Abeja","c":"Creencias","p":10000,"f":"cera-de-abeja","t":false,"d":false},{"n":"Primera Comunión","c":"Creencias","p":20000,"f":"primera-comunion","t":false,"d":false},{"n":"Cisne","c":"Animalitos","p":24000,"f":"cisne","t":false,"d":false},{"n":"Pato","c":"Animalitos","p":23000,"f":"pato","t":false,"d":false},{"n":"Oveja","c":"Animalitos","p":39000,"f":"oveja","t":false,"d":false},{"n":"Caballito de Mar","c":"Animalitos","p":20000,"f":"caballito-de-mar","t":false,"d":false},{"n":"Perrito y Gatico Cielo","c":"Animalitos","p":27000,"f":"perrito-y-gatico-cielo","t":false,"d":false},{"n":"Gato Sentado","c":"Animalitos","p":23000,"f":"gato-sentado","t":false,"d":false},{"n":"Elefante Bebé","c":"Animalitos","p":21000,"f":"elefante-bebe","t":false,"d":false},{"n":"Cat Majesty","c":"Animalitos","p":31000,"f":"cat-majesty","t":false,"d":false},{"n":"Mariposa","c":"Animalitos","p":19000,"f":"mariposa","t":false,"d":false},{"n":"Conejito","c":"Animalitos","p":21000,"f":"conejito","t":false,"d":false},{"n":"Pomerania","c":"Animalitos","p":24000,"f":"pomerania","t":false,"d":false},{"n":"Bulldog","c":"Animalitos","p":17000,"f":"bulldog","t":false,"d":false},{"n":"Lobo","c":"Animalitos","p":78000,"f":"lobo","t":false,"d":false},{"n":"Perrito","c":"Animalitos","p":29000,"f":"perrito","t":false,"d":false},{"n":"Monito","c":"Animalitos","p":19000,"f":"monito","t":false,"d":false},{"n":"Cerdito","c":"Animalitos","p":25000,"f":"cerdito","t":false,"d":false},{"n":"Llama","c":"Animalitos","p":20000,"f":"llama","t":false,"d":false},{"n":"Labrador","c":"Animalitos","p":28000,"f":"labrador","t":false,"d":false},{"n":"Ardilla","c":"Animalitos","p":26000,"f":"ardilla","t":false,"d":false},{"n":"León","c":"Animalitos","p":35000,"f":"leon","t":false,"d":false},{"n":"Delfín","c":"Animalitos","p":22000,"f":"delfin","t":false,"d":false},{"n":"Huella","c":"Animalitos","p":25000,"f":"huella","t":false,"d":false},{"n":"Caballo","c":"Animalitos","p":22000,"f":"caballo","t":false,"d":false},{"n":"Peonía XL","c":"Flores","p":60000,"f":"peonia-xl","t":false,"d":false},{"n":"Rosa 3D","c":"Flores","p":38000,"f":"rosa-3d","t":false,"d":false},{"n":"Peonía","c":"Flores","p":21000,"f":"peonia","t":true,"d":false},{"n":"Tulipán","c":"Flores","p":30000,"f":"tulipan","t":false,"d":false},{"n":"Ramo de Flores","c":"Flores","p":38000,"f":"ramo-de-flores","t":false,"d":false},{"n":"Círculo de Rosas G","c":"Flores","p":45000,"f":"circulo-de-rosas-g","t":false,"d":false},{"n":"Círculo de Rosas P","c":"Flores","p":12000,"f":"circulo-de-rosas-p","t":false,"d":false},{"n":"Recipiente Aromático","c":"Flores","p":65000,"f":"recipiente-aromatico","t":false,"d":false},{"n":"Oso Corazón","c":"Osos cariñosos","p":46000,"f":"oso-corazon","t":false,"d":false},{"n":"Oso Bebé","c":"Osos cariñosos","p":28000,"f":"oso-bebe","t":false,"d":false},{"n":"Teddy Mini","c":"Osos cariñosos","p":9000,"f":"teddy-mini","t":false,"d":false},{"n":"Oso Moño","c":"Osos cariñosos","p":31000,"f":"oso-mono","t":false,"d":false},{"n":"Osito Flotador","c":"Osos cariñosos","p":25000,"f":"osito-flotador","t":false,"d":false},{"n":"Oso Musculoso","c":"Osos cariñosos","p":26000,"f":"oso-musculoso","t":false,"d":false},{"n":"Macarrones x4","c":"Otros","p":28000,"f":"macarrones-x4","t":false,"d":false},{"n":"Huevito","c":"Otros","p":20000,"f":"huevito","t":false,"d":false},{"n":"Croissant","c":"Otros","p":23000,"f":"croissant","t":false,"d":false},{"n":"Helado","c":"Otros","p":29000,"f":"helado","t":false,"d":false},{"n":"Dólares","c":"Otros","p":25000,"f":"dolares","t":false,"d":false},{"n":"Dinero","c":"Otros","p":31000,"f":"dinero","t":false,"d":false},{"n":"Calabaza","c":"Halloween","p":22000,"f":"calabaza","t":false,"d":false},{"n":"Calavera","c":"Halloween","p":25000,"f":"calavera","t":false,"d":false},{"n":"Fantasma Boo","c":"Halloween","p":29000,"f":"fantasma-boo","t":false,"d":false}];
+  var CACHE_KEY = 'cdv_catalogo_v1';
 
   var COLS = [
     { id: 'navidad', name: 'Navidad' },
@@ -19,12 +22,33 @@
     { id: 'flores', name: 'Flores' },
     { id: 'osos', name: 'Osos cariñosos' },
     { id: 'otros', name: 'Otros' },
-    { id: 'halloween', name: 'Halloween', until: '2026-11-02' }
+    { id: 'halloween', name: 'Halloween', until: '2026-11-02' },
+    { id: 'easter', name: 'Happy Easter' }
   ];
   var today = new Date().toISOString().slice(0, 10);
   COLS = COLS.filter(function (c) { return !c.until || today < c.until; });
   var activeIds = COLS.map(function (c) { return c.id; });
-  PRODUCTS = PRODUCTS.filter(function (p) { return activeIds.indexOf(p.c) > -1; });
+  var COLMAP = {};
+  COLS.forEach(function (c) { COLMAP[norm(c.name)] = c.id; });
+
+  function imgUrl(f) {
+    f = String(f || '').trim();
+    if (!f) return IMG + 'logo.png';
+    var m = f.match(/\/d\/([\w-]{20,})/) || f.match(/[?&]id=([\w-]{20,})/);
+    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w800';
+    if (/^https?:\/\//i.test(f)) return f;
+    return IMG + f.replace(/\.(jpe?g|png|webp)$/i, '') + '.jpg';
+  }
+  function normalize(items) {
+    return (items || []).map(function (i) {
+      return { n: String(i.n), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d };
+    }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
+  }
+  var PRODUCTS = normalize(FALLBACK);
+  try {
+    var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && cached.items && cached.items.length) PRODUCTS = normalize(cached.items);
+  } catch (e) {}
 
   var COLORS = [
     ['Blanco', '#FFFFFF'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
@@ -41,8 +65,6 @@
   var GENERAL = waLink('Hola Cielo de Velas, quiero hacer un pedido.');
   var GIFTS = waLink('Hola Cielo de Velas, quiero cotizar regalos navideños. Cantidad aproximada: ');
   var EVENTS = waLink('Hola Cielo de Velas, quiero cotizar velas para un evento. Tipo de evento y fecha: ');
-  var bySlug = {};
-  PRODUCTS.forEach(function (p) { bySlug[p.s] = p; });
 
   var ICON_WA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>';
   var ICON_IG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>';
@@ -146,15 +168,19 @@
   ].join('\n');
 
   function card(p) {
-    var top = TOP.indexOf(p.s) > -1 ? '<span class="tag">Más vendida</span>' : '';
+    var top = p.top ? '<span class="tag">Más vendida</span>' : '';
     return '<article class="card">' +
-      '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + IMG + p.s + '.jpg" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
+      '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
       '<div class="meta"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></div>' +
       '<a class="btn btn-wine" href="' + orderLink(p) + '" target="_blank" rel="noopener">' + ICON_WA + '<span class="lg">Pedir por WhatsApp</span><span class="sm">Pedir</span></a>' +
       '</article>';
   }
 
-  var featured = ['6-deseos', 'arbol-bolitas', 'gnomo', 'reno-3d'].map(function (s) { return bySlug[s]; }).filter(Boolean);
+  function featured() {
+    var f = PRODUCTS.filter(function (p) { return p.feat; });
+    if (!f.length) f = PRODUCTS.filter(function (p) { return p.c === 'navidad'; });
+    return f.slice(0, 4);
+  }
 
   var html =
     '<div class="topbar">Pedidos navideños abiertos · Separa tus regalos por WhatsApp</div>' +
@@ -172,10 +198,10 @@
     '<div class="chips"><span class="chip">Hechas a mano</span><span class="chip">Materias primas naturales</span><span class="chip">Libres de tóxicos</span><span class="chip">Sostenibles</span></div>' +
     '<section class="block" style="padding-top:24px"><div class="wrap">' +
       '<div class="head"><div><span class="script">Temporada navideña</span><h2>Las favoritas de la temporada</h2></div><a class="btn btn-dark" href="#catalogo" data-col="navidad">Ver toda la Navidad</a></div>' +
-      '<div class="grid">' + featured.map(card).join('') + '</div>' +
+      '<div class="grid" id="cdv-feat">' + featured().map(card).join('') + '</div>' +
     '</div></section>' +
     '<section id="catalogo" class="block" style="background:#fff;border-top:1px solid #EFE0CF;border-bottom:1px solid #EFE0CF"><div class="wrap">' +
-      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub">' + PRODUCTS.length + ' diseños hechos a mano. Todos disponibles en 9 colores: nos dices cuál al pedir.</p></div></div>' +
+      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub"><span id="cdv-total">' + PRODUCTS.length + '</span> diseños hechos a mano. Todos disponibles en 9 colores: nos dices cuál al pedir.</p></div></div>' +
       '<div class="tools"><div class="tabs" role="group" aria-label="Colecciones"></div>' +
       '<label class="search"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar una vela</span>' + ICON_SEARCH + '<input type="search" placeholder="Buscar: reno, ángel, peonía..." autocomplete="off"></label></div>' +
       '<p class="count" aria-live="polite"></p><div class="grid" id="cdv-grid"></div>' +
@@ -192,8 +218,8 @@
       '<p>Bodas, baby showers, cumpleaños, primeras comuniones y grados. Elige el diseño, el color y la cantidad.</p>' +
       '<ul class="ticks"><li>Pedidos por cantidad para tu evento</li><li>Colores a juego con tu decoración</li><li>Precios especiales por mayor</li></ul>' +
       '<a class="btn btn-wine" href="' + EVENTS + '" target="_blank" rel="noopener">Cotizar mi evento</a></div>' +
-      '<div class="mosaic">' + ['boda-corazon', 'baby-shower', 'numeros', 'pareja', 'zapatico-bebe', 'primera-comunion'].map(function (s) {
-        var p = bySlug[s]; return p ? '<img loading="lazy" src="' + IMG + s + '.jpg" alt="Vela ' + esc(p.n) + '">' : '';
+      '<div class="mosaic">' + [['boda-corazon', 'Boda Corazón'], ['baby-shower', 'Baby Shower'], ['numeros', 'Números'], ['pareja', 'Pareja'], ['zapatico-bebe', 'Zapatico Bebé'], ['primera-comunion', 'Primera Comunión']].map(function (m) {
+        return '<img loading="lazy" src="' + IMG + m[0] + '.jpg" alt="Vela ' + m[1] + '">';
       }).join('') + '</div>' +
     '</div></section>' +
     '<section class="block"><div class="wrap center"><p class="script" style="font-size:36px;color:var(--wine)">Colores disponibles</p><h2 style="font-size:clamp(30px,4vw,44px)">Elige tu color favorito</h2>' +
@@ -225,7 +251,10 @@
 
   function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function renderTabs() {
-    var all = [{ id: 'todas', name: 'Todas' }].concat(COLS);
+    var used = {};
+    PRODUCTS.forEach(function (p) { used[p.c] = true; });
+    if (state.col !== 'todas' && !used[state.col]) state.col = 'todas';
+    var all = [{ id: 'todas', name: 'Todas' }].concat(COLS.filter(function (c) { return used[c.id]; }));
     tabsEl.innerHTML = all.map(function (c) {
       return '<button type="button" class="tab" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + c.name + '</button>';
     }).join('');
@@ -251,4 +280,26 @@
     if (a) setCol(a.getAttribute('data-col'));
   });
   renderTabs(); renderGrid();
+
+  function applyFeed(items) {
+    var next = normalize(items);
+    if (!next.length) return;
+    PRODUCTS = next;
+    ROOT.querySelector('#cdv-feat').innerHTML = featured().map(card).join('');
+    ROOT.querySelector('#cdv-total').textContent = PRODUCTS.length;
+    renderTabs(); renderGrid();
+  }
+  if (FEED.indexOf('http') === 0 && window.fetch) {
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
+    fetch(FEED, { credentials: 'omit', signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        clearTimeout(timer);
+        if (!d || !d.items) return;
+        applyFeed(d.items);
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
+      })
+      .catch(function () { clearTimeout(timer); });
+  }
 })();
