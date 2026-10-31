@@ -172,7 +172,7 @@
     return '<article class="card">' +
       '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
       '<div class="meta"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></div>' +
-      '<a class="btn btn-wine" href="' + orderLink(p) + '" target="_blank" rel="noopener">' + ICON_WA + '<span class="lg">Pedir por WhatsApp</span><span class="sm">Pedir</span></a>' +
+      '<a class="btn btn-wine" href="' + orderLink(p) + '" target="_blank" rel="noopener" data-fb="pedido" data-n="' + esc(p.n) + '" data-p="' + p.p + '">' + ICON_WA + '<span class="lg">Pedir por WhatsApp</span><span class="sm">Pedir</span></a>' +
       '</article>';
   }
 
@@ -278,6 +278,31 @@
   ROOT.addEventListener('click', function (e) {
     var a = e.target.closest('a[data-col]');
     if (a) setCol(a.getAttribute('data-col'));
+    var w = e.target.closest('a[href*="wa.me/"]');
+    if (w) track(w);
+  });
+
+  // Meta Pixel: cada clic a WhatsApp es un contacto (pedido o cotización).
+  function track(a) {
+    if (typeof window.fbq !== 'function') return;
+    try {
+      var href = a.getAttribute('href');
+      if (a.getAttribute('data-fb') === 'pedido') {
+        window.fbq('track', 'Contact', { content_name: a.getAttribute('data-n'), value: Number(a.getAttribute('data-p')), currency: 'COP', content_category: 'pedido_vela' });
+      } else if (href === GIFTS || href === EVENTS) {
+        window.fbq('track', 'Lead', { content_category: href === GIFTS ? 'cotizacion_regalos' : 'cotizacion_evento', currency: 'COP' });
+      } else {
+        window.fbq('track', 'Contact', { content_category: 'whatsapp_general' });
+      }
+    } catch (err) {}
+  }
+  var searchTimer;
+  input.addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () {
+      var q = input.value.trim();
+      if (q.length > 2 && typeof window.fbq === 'function') window.fbq('track', 'Search', { search_string: q });
+    }, 1500);
   });
   renderTabs(); renderGrid();
 
