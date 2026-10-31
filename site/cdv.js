@@ -3,7 +3,7 @@
   var ROOT = document.getElementById('cdv');
   if (!ROOT) return;
 
-  var BASE = 'https://cdn.jsdelivr.net/gh/jsf2907/cielodevelas-assets@v1/';
+  var BASE = 'https://cdn.jsdelivr.net/gh/jsf2907/cielodevelas-assets@main/';
   var IMG = BASE + 'img/';
   var WA = '573225911307';
   var IG = 'https://www.instagram.com/cielo.develas';
