@@ -134,6 +134,7 @@
     '#cdv .nextbar a{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--sand);border-radius:18px;padding:18px 26px;text-decoration:none;font-weight:600;font-size:17px}',
     '#cdv .nextbar b{color:var(--wine);font-weight:700;white-space:nowrap}',
     '#cdv .nextbar:empty{display:none}',
+    '@media (max-width:860px){#cdv .hero-card img{object-position:78% 60%}#cdv .nextbar a{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 18px;font-size:15px}}',
     '#cdv .tab.season{border-color:var(--wine);color:var(--wine)}#cdv .tab.season[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:#fff}',
     '#cdv .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:32px 20px}',
     '#cdv .chip{background:var(--sand);color:#5A3A2E;padding:10px 18px;border-radius:999px;font-size:15px;font-weight:700}',
