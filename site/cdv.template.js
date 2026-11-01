@@ -41,14 +41,40 @@
   }
   function normalize(items) {
     return (items || []).map(function (i) {
-      return { n: String(i.n), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d };
+      return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String) };
     }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
   }
   var PRODUCTS = normalize(FALLBACK);
+  var SEASON = null; // { actual, siguiente } desde la pestaña Temporadas (Web.gs)
   try {
     var cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
     if (cached && cached.items && cached.items.length) PRODUCTS = normalize(cached.items);
+    if (cached && cached.temporada) SEASON = cached.temporada;
   } catch (e) {}
+
+  // Temporadas: promocionan, nunca ocultan. Una vela entra en la temporada por su colección, su etiqueta o su Ref.
+  var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  var DEFAULT_SEASON = { nombre: 'Entre temporadas', entre: true, titular: 'Velas hechas a mano en Medellín', subtitulo: 'Diseños únicos para tu hogar y para regalar.', coleccion: '', refs: [] };
+  function slug(s) { return norm(String(s || '')).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function seasonImg(t) { return t.imagen ? imgUrl(t.imagen) : IMG + 'temporada-' + slug(t.nombre) + '.jpg'; }
+  function daysTo(f) {
+    if (!f) return null;
+    var p = String(f).split('-').map(Number), now = new Date();
+    var a = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()), b = Date.UTC(p[0], p[1] - 1, p[2]);
+    return Math.round((b - a) / 86400000);
+  }
+  function dateTxt(f) { var p = String(f || '').split('-').map(Number); return p.length === 3 ? p[2] + ' de ' + MESES[p[1] - 1] : ''; }
+  function inSeason(p, t) {
+    if (!t) return false;
+    if (t.coleccion && norm(p.cn) === norm(t.coleccion)) return true;
+    if ((t.refs || []).indexOf(p.r) > -1) return true;
+    var n = norm(t.nombre || '');
+    return p.s.some(function (x) { return norm(x) === n; });
+  }
+  function current() { var a = SEASON && SEASON.actual; return a && a.nombre ? a : DEFAULT_SEASON; }
+  function nextSeason() { var n = SEASON && SEASON.siguiente; return n && n.nombre && n.fecha ? n : null; }
+  function seasonList(t) { return PRODUCTS.filter(function (p) { return inSeason(p, t); }); }
+  function shortName(t) { return t.entre ? (t.coleccion || 'Destacadas') : t.nombre; }
 
   var COLORS = [
     ['Blanco', '#FFFFFF'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
@@ -63,7 +89,7 @@
     return waLink('Hola Cielo de Velas, quiero pedir la vela ' + p.n + ' (' + money(p.p) + '). Color: ');
   }
   var GENERAL = waLink('Hola Cielo de Velas, quiero hacer un pedido.');
-  var GIFTS = waLink('Hola Cielo de Velas, quiero cotizar regalos navideños. Cantidad aproximada: ');
+  var GIFTS = waLink('Hola Cielo de Velas, quiero cotizar regalos. Cantidad aproximada: ');
   var EVENTS = waLink('Hola Cielo de Velas, quiero cotizar velas para un evento. Tipo de evento y fecha: ');
 
   var ICON_WA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>';
@@ -104,6 +130,11 @@
     '#cdv .hero-txt h1{font-size:clamp(42px,6vw,70px)}',
     '#cdv .hero-txt p{font-size:19px;color:#F4E6DA;max-width:520px}',
     '#cdv .row{display:flex;flex-wrap:wrap;gap:12px}',
+    '#cdv .nextbar{max-width:1240px;margin:16px auto 0;padding:0 20px}',
+    '#cdv .nextbar a{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--sand);border-radius:18px;padding:18px 26px;text-decoration:none;font-weight:600;font-size:17px}',
+    '#cdv .nextbar b{color:var(--wine);font-weight:700;white-space:nowrap}',
+    '#cdv .nextbar:empty{display:none}',
+    '#cdv .tab.season{border-color:var(--wine);color:var(--wine)}#cdv .tab.season[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:#fff}',
     '#cdv .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:32px 20px}',
     '#cdv .chip{background:var(--sand);color:#5A3A2E;padding:10px 18px;border-radius:999px;font-size:15px;font-weight:700}',
     '#cdv section.block{padding:64px 0}',
@@ -177,27 +208,30 @@
   }
 
   function featured() {
-    var f = PRODUCTS.filter(function (p) { return p.feat; });
-    if (!f.length) f = PRODUCTS.filter(function (p) { return p.c === 'navidad'; });
-    return f.slice(0, 4);
+    var t = current();
+    var list = seasonList(t);
+    if (t.entre || !list.length) {
+      var f = PRODUCTS.filter(function (p) { return p.feat; });
+      list = list.length ? list : f;
+      if (!list.length) list = PRODUCTS.filter(function (p) { return p.top; });
+    }
+    var fav = list.filter(function (p) { return p.feat || p.top; });
+    var rest = list.filter(function (p) { return !(p.feat || p.top); });
+    return fav.concat(rest).slice(0, 8);
   }
 
   var html =
-    '<div class="topbar">Pedidos navideños abiertos · Separa tus regalos por WhatsApp</div>' +
+    '<div class="topbar" id="cdv-top"></div>' +
     '<header class="nav"><div class="nav-in">' +
       '<a class="brand" href="#inicio" aria-label="Cielo de Velas, inicio"><img src="' + IMG + 'logo.png" alt="Logo Cielo de Velas" width="58" height="55"><span>Cielo de velas</span></a>' +
-      '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="navidad">Navidad</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a></nav>' +
+      '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a></nav>' +
       '<a class="btn btn-dark" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
     '</div></header>' +
-    '<div id="inicio" class="hero"><div class="hero-card">' +
-      '<img src="' + IMG + 'hero-regalos.jpg" alt="Bolsas de regalo con velas artesanales y lazo rosado" fetchpriority="high">' +
-      '<div class="hero-txt"><p class="script">Esta Navidad</p><h1>Regala calor de hogar</h1>' +
-      '<p>Velas hechas a mano, una por una, con materias primas naturales y certificadas. Para encender las novenas, la cena y los momentos que se quedan.</p>' +
-      '<div class="row"><a class="btn btn-gold" href="#catalogo" data-col="navidad">Ver velas navideñas</a><a class="btn btn-ghost" href="' + GIFTS + '" target="_blank" rel="noopener">Armar un regalo</a></div></div>' +
-    '</div></div>' +
+    '<div id="inicio" class="hero"><div class="hero-card" id="cdv-hero"></div></div>' +
+    '<div class="nextbar" id="cdv-next"></div>' +
     '<div class="chips"><span class="chip">Hechas a mano</span><span class="chip">Materias primas naturales</span><span class="chip">Libres de tóxicos</span><span class="chip">Sostenibles</span></div>' +
     '<section class="block" style="padding-top:24px"><div class="wrap">' +
-      '<div class="head"><div><span class="script">Temporada navideña</span><h2>Las favoritas de la temporada</h2></div><a class="btn btn-dark" href="#catalogo" data-col="navidad">Ver toda la Navidad</a></div>' +
+      '<div class="head" id="cdv-feathead"></div>' +
       '<div class="grid" id="cdv-feat">' + featured().map(card).join('') + '</div>' +
     '</div></section>' +
     '<section id="catalogo" class="block" style="background:#fff;border-top:1px solid #EFE0CF;border-bottom:1px solid #EFE0CF"><div class="wrap">' +
@@ -209,7 +243,7 @@
     '<section id="regalos" class="block gifts"><div class="wrap split">' +
       '<img loading="lazy" src="' + IMG + 'hero-carrito.jpg" alt="Carrito rosado lleno de velas artesanales con lazo">' +
       '<div><p class="script">Detalles con amor</p><h2>Regalos listos para entregar</h2>' +
-      '<p>Combinamos velas en bolsas y cajas con lazo para intercambios, novenas, clientes y equipos de trabajo.</p>' +
+      '<p>Combinamos velas en bolsas y cajas con lazo para fechas especiales, intercambios, clientes y equipos de trabajo.</p>' +
       '<ul class="ticks"><li>Regalos individuales o surtidos</li><li>Pedidos por cantidad para empresas</li><li>Colores a juego con tu marca o tu decoración</li></ul>' +
       '<a class="btn btn-gold" href="' + GIFTS + '" target="_blank" rel="noopener">Cotizar regalos</a></div>' +
     '</div></section>' +
@@ -243,7 +277,7 @@
   document.head.appendChild(style);
   ROOT.innerHTML = html;
 
-  var state = { col: 'navidad', q: '' };
+  var state = { col: 'temp:actual', q: '' };
   var tabsEl = ROOT.querySelector('.tabs');
   var gridEl = ROOT.querySelector('#cdv-grid');
   var countEl = ROOT.querySelector('.count');
@@ -253,21 +287,52 @@
   function renderTabs() {
     var used = {};
     PRODUCTS.forEach(function (p) { used[p.c] = true; });
-    if (state.col !== 'todas' && !used[state.col]) state.col = 'todas';
-    var all = [{ id: 'todas', name: 'Todas' }].concat(COLS.filter(function (c) { return used[c.id]; }));
+    var seasonTabs = [];
+    var t = current(), nx = nextSeason();
+    if (seasonList(t).length) seasonTabs.push({ id: 'temp:actual', name: shortName(t), season: true });
+    if (nx && seasonList(nx).length && nx.nombre !== t.nombre) seasonTabs.push({ id: 'temp:siguiente', name: nx.nombre, season: true });
+    var valid = seasonTabs.some(function (x) { return x.id === state.col; }) || state.col === 'todas' || used[state.col];
+    if (!valid) state.col = seasonTabs.length ? 'temp:actual' : 'todas';
+    var all = seasonTabs.concat([{ id: 'todas', name: 'Todas' }]).concat(COLS.filter(function (c) { return used[c.id]; }));
     tabsEl.innerHTML = all.map(function (c) {
-      return '<button type="button" class="tab" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + c.name + '</button>';
+      return '<button type="button" class="tab' + (c.season ? ' season' : '') + '" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + esc(c.name) + '</button>';
     }).join('');
   }
   function renderGrid() {
     var q = norm(state.q.trim());
     var list = PRODUCTS.filter(function (p) {
       if (q) return norm(p.n).indexOf(q) > -1;
+      if (state.col === 'temp:actual') return inSeason(p, current());
+      if (state.col === 'temp:siguiente') return inSeason(p, nextSeason());
       return state.col === 'todas' || p.c === state.col;
     });
     countEl.textContent = list.length + (list.length === 1 ? ' vela' : ' velas');
     gridEl.innerHTML = list.length ? list.map(card).join('') :
       '<div class="empty" style="grid-column:1/-1">No encontramos esa vela. <a href="' + GENERAL + '" target="_blank" rel="noopener">Pregúntanos por WhatsApp</a>.</div>';
+  }
+  function renderSeason() {
+    var t = current(), nx = nextSeason(), d = daysTo(t.fecha);
+    var kicker = t.entre ? 'Hechas a mano en Medellín' : (d === 0 ? '¡Es hoy!' : d === 1 ? 'Falta 1 día' : d > 1 ? 'Faltan ' + d + ' días' : t.nombre);
+    var waSeason = t.entre ? GENERAL : waLink('Hola Cielo de Velas, quiero hacer un pedido para ' + t.nombre + '.');
+    var hasList = seasonList(t).length > 0;
+    ROOT.querySelector('#cdv-hero').innerHTML =
+      '<img src="' + esc(seasonImg(t)) + '" alt="' + esc(t.titular || t.nombre) + '" fetchpriority="high" onerror="this.onerror=null;this.src=\'' + IMG + 'hero-regalos.jpg\'">' +
+      '<div class="hero-txt"><p class="script">' + esc(kicker) + '</p><h1>' + esc(t.titular || t.nombre) + '</h1>' +
+      (t.subtitulo ? '<p>' + esc(t.subtitulo) + '</p>' : '') +
+      '<div class="row"><a class="btn btn-wine" href="#catalogo" data-col="' + (hasList ? 'temp:actual' : 'todas') + '">Ver colección</a>' +
+      '<a class="btn btn-ghost" href="' + waSeason + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir por WhatsApp</a></div></div>';
+    ROOT.querySelector('#cdv-next').innerHTML = (nx && nx.nombre !== t.nombre) ?
+      '<a href="#catalogo" data-col="temp:siguiente">' + (t.entre ? 'Ya llega ' : 'Después: ') + esc(nx.nombre) + ' · ' + dateTxt(nx.fecha) + '<b>Ver colección →</b></a>' : '';
+    ROOT.querySelector('#cdv-top').textContent = t.entre ?
+      'Velas artesanales hechas a mano en Medellín · Pedidos por WhatsApp' :
+      'Pedidos para ' + t.nombre + ' abiertos · ' + (d > 0 ? 'Faltan ' + d + ' días · ' : '') + 'Escríbenos por WhatsApp';
+    var nav = ROOT.querySelector('#cdv-navseason');
+    nav.textContent = shortName(t);
+    nav.setAttribute('data-col', hasList ? 'temp:actual' : 'todas');
+    ROOT.querySelector('#cdv-feathead').innerHTML =
+      '<div><span class="script">' + esc(t.entre ? 'Nuestras favoritas' : 'Especial ' + t.nombre) + '</span><h2>' + (t.entre ? 'Las más pedidas' : 'Las favoritas de la temporada') + '</h2></div>' +
+      '<a class="btn btn-dark" href="#catalogo" data-col="' + (hasList ? 'temp:actual' : 'todas') + '">Ver todas</a>';
+    ROOT.querySelector('#cdv-feat').innerHTML = featured().map(card).join('');
   }
   function setCol(id) { state.col = id; state.q = ''; input.value = ''; renderTabs(); renderGrid(); }
 
@@ -304,15 +369,15 @@
       if (q.length > 2 && typeof window.fbq === 'function') window.fbq('track', 'Search', { search_string: q });
     }, 1500);
   });
-  renderTabs(); renderGrid();
+  renderSeason(); renderTabs(); renderGrid();
 
-  function applyFeed(items) {
+  function applyFeed(items, temporada) {
     var next = normalize(items);
     if (!next.length) return;
     PRODUCTS = next;
-    ROOT.querySelector('#cdv-feat').innerHTML = featured().map(card).join('');
+    if (temporada) SEASON = temporada;
     ROOT.querySelector('#cdv-total').textContent = PRODUCTS.length;
-    renderTabs(); renderGrid();
+    renderSeason(); renderTabs(); renderGrid();
   }
   if (FEED.indexOf('http') === 0 && window.fetch) {
     var ctrl = window.AbortController ? new AbortController() : null;
@@ -322,7 +387,7 @@
       .then(function (d) {
         clearTimeout(timer);
         if (!d || !d.items) return;
-        applyFeed(d.items);
+        applyFeed(d.items, d.temporada);
         try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) {}
       })
       .catch(function () { clearTimeout(timer); });
