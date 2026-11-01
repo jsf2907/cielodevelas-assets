@@ -22,7 +22,7 @@
     { id: 'flores', name: 'Flores' },
     { id: 'osos', name: 'Osos cariñosos' },
     { id: 'otros', name: 'Otros' },
-    { id: 'halloween', name: 'Halloween', until: '2026-11-02' },
+    { id: 'halloween', name: 'Halloween' },
     { id: 'easter', name: 'Happy Easter' }
   ];
   var today = new Date().toISOString().slice(0, 10);
