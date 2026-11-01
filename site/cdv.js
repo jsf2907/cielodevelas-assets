@@ -293,7 +293,8 @@
     if (nx && seasonList(nx).length && nx.nombre !== t.nombre) seasonTabs.push({ id: 'temp:siguiente', name: nx.nombre, season: true });
     var valid = seasonTabs.some(function (x) { return x.id === state.col; }) || state.col === 'todas' || used[state.col];
     if (!valid) state.col = seasonTabs.length ? 'temp:actual' : 'todas';
-    var all = seasonTabs.concat([{ id: 'todas', name: 'Todas' }]).concat(COLS.filter(function (c) { return used[c.id]; }));
+    var sNames = seasonTabs.map(function (x) { return norm(x.name); });
+    var all = seasonTabs.concat([{ id: 'todas', name: 'Todas' }]).concat(COLS.filter(function (c) { return used[c.id] && sNames.indexOf(norm(c.name)) < 0; }));
     tabsEl.innerHTML = all.map(function (c) {
       return '<button type="button" class="tab' + (c.season ? ' season' : '') + '" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + esc(c.name) + '</button>';
     }).join('');
