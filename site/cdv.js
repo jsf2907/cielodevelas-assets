@@ -200,6 +200,9 @@
     '#cdv .sm{display:none}',
     '@media (max-width:860px){#cdv .tabs{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:6px;scrollbar-width:none}#cdv .tabs::-webkit-scrollbar{display:none}#cdv .tab{flex:0 0 auto}}',
     '@media (max-width:520px){#cdv .card .lg{display:none}#cdv .card .sm{display:inline}}',
+    '#cdv .slogan{display:none}',
+    '@media (max-width:860px){#cdv .slogan{display:block;flex:1 1 auto;min-width:0;margin:0 auto 0 0;padding-left:12px;border-left:1px solid #E3CDB8;font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:13px;line-height:1.3;color:var(--wine);text-wrap:balance;max-width:260px}}',
+    '@media (max-width:380px){#cdv .slogan{font-size:12px;padding-left:9px}}',
     '#cdv .tabbar{display:none}',
     '@media (max-width:860px){#cdv .float{display:none}#cdv .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,248,239,.97);backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #EFE0CF;box-shadow:0 -6px 20px rgba(43,34,32,.08);padding:6px 4px calc(8px + env(safe-area-inset-bottom,0px))}#cdv .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;transition:color .2s ease}#cdv .tabbar a.on{color:var(--wine)}#cdv .tabbar a.wa{color:#1F7A4D}#cdv footer{padding-bottom:calc(36px + 72px + env(safe-area-inset-bottom,0px))}}',
     '@media (prefers-reduced-motion:reduce){#cdv *{transition:none!important}}'
@@ -231,6 +234,7 @@
     '<div class="topbar" id="cdv-top"></div>' +
     '<header class="nav"><div class="nav-in">' +
       '<a class="brand" href="#inicio" aria-label="Cielo de Velas, inicio"><img src="' + IMG + 'logo.png" alt="Logo Cielo de Velas" width="58" height="55"><span>Cielo de velas</span></a>' +
+      '<p class="slogan">Por cada vela que enciendes, nace una luz en el cielo.</p>' +
       '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a></nav>' +
       '<a class="btn btn-dark" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
     '</div></header>' +
