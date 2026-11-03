@@ -93,6 +93,10 @@
   var EVENTS = waLink('Hola Cielo de Velas, quiero cotizar velas para un evento. Tipo de evento y fecha: ');
 
   var ICON_WA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>';
+  var ICON_HOME = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>';
+  var ICON_GRID = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>';
+  var ICON_GIFT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8zm0 0s1.5-5 4-3.5S14.5 8 12 8z"/></svg>';
+  var ICON_EVENT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/></svg>';
   var ICON_IG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>';
   var ICON_SEARCH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
@@ -196,6 +200,8 @@
     '#cdv .sm{display:none}',
     '@media (max-width:860px){#cdv .tabs{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:6px;scrollbar-width:none}#cdv .tabs::-webkit-scrollbar{display:none}#cdv .tab{flex:0 0 auto}}',
     '@media (max-width:520px){#cdv .card .lg{display:none}#cdv .card .sm{display:inline}}',
+    '#cdv .tabbar{display:none}',
+    '@media (max-width:860px){#cdv .float{display:none}#cdv .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,248,239,.97);backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #EFE0CF;box-shadow:0 -6px 20px rgba(43,34,32,.08);padding:6px 4px calc(8px + env(safe-area-inset-bottom,0px))}#cdv .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;transition:color .2s ease}#cdv .tabbar a.on{color:var(--wine)}#cdv .tabbar a.wa{color:#1F7A4D}#cdv footer{padding-bottom:calc(36px + 72px + env(safe-area-inset-bottom,0px))}}',
     '@media (prefers-reduced-motion:reduce){#cdv *{transition:none!important}}'
   ].join('\n');
 
@@ -271,7 +277,14 @@
       '<div style="max-width:360px;display:flex;flex-direction:column;gap:14px"><img src="' + IMG + 'logo-crema.png" alt="Cielo de Velas" width="120" height="115"><p>Velas artesanales hechas a mano en Medellín con materias primas naturales y certificadas.</p></div>' +
       '<div><p style="font-weight:700;color:var(--cream);margin-bottom:8px">Contacto</p><a href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + '+57 322 591 1307</a><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + '@cielo.develas</a></div>' +
     '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp. © ' + new Date().getFullYear() + ' Cielo de Velas.</p></div></footer>' +
-    '<a class="float" href="' + GENERAL + '" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">' + ICON_WA + '<span>Pedir por WhatsApp</span></a>';
+    '<a class="float" href="' + GENERAL + '" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">' + ICON_WA + '<span>Pedir por WhatsApp</span></a>' +
+    '<nav class="tabbar" aria-label="Secciones">' +
+      '<a href="#inicio" data-spy="inicio" class="on">' + ICON_HOME + 'Inicio</a>' +
+      '<a href="#catalogo" data-spy="catalogo">' + ICON_GRID + 'Catálogo</a>' +
+      '<a href="#regalos" data-spy="regalos">' + ICON_GIFT + 'Regalos</a>' +
+      '<a href="#eventos" data-spy="eventos">' + ICON_EVENT + 'Eventos</a>' +
+      '<a class="wa" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
+    '</nav>';
 
   var style = document.createElement('style');
   style.textContent = css;
@@ -360,6 +373,24 @@
     var y = id === 'inicio' ? 0 : target.getBoundingClientRect().top + window.pageYOffset - off;
     window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
   }, true);
+
+  // Barra inferior (solo celular): resalta la sección visible.
+  (function () {
+    var bar = ROOT.querySelector('.tabbar'); if (!bar) return;
+    var links = [].slice.call(bar.querySelectorAll('[data-spy]'));
+    var ids = ['catalogo', 'regalos', 'eventos', 'pedir'];
+    var last = 'inicio', ticking = false;
+    function update() {
+      ticking = false;
+      var head = ROOT.querySelector('header.nav');
+      var line = (head ? head.getBoundingClientRect().height : 0) + 60, cur = 'inicio';
+      ids.forEach(function (id) { var el = ROOT.querySelector('#' + id); if (el && el.getBoundingClientRect().top <= line) cur = id; });
+      if (cur === 'pedir') cur = '';
+      if (cur === last) return; last = cur;
+      links.forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-spy') === cur); });
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  })();
 
   ROOT.addEventListener('click', function (e) {
     var a = e.target.closest('a[data-col]');
