@@ -342,6 +342,25 @@
     var b = e.target.closest('.tab'); if (b) setCol(b.getAttribute('data-id'));
   });
   input.addEventListener('input', function () { state.q = input.value; renderTabs(); renderGrid(); });
+  // Carrd trata cualquier enlace "#algo" como cambio de sección y manda al inicio
+  // (o abre la landing "#regalos"). Atrapamos los enlaces internos antes que Carrd
+  // y hacemos el scroll nosotros, compensando el menú fijo.
+  window.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('#cdv a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    var target = id === 'inicio' ? ROOT : (id && ROOT.querySelector('#' + CSS.escape(id)));
+    if (!target) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (a.hasAttribute('data-col')) setCol(a.getAttribute('data-col'));
+    var head = ROOT.querySelector('header.nav');
+    var off = head ? head.getBoundingClientRect().height + 8 : 0;
+    var y = id === 'inicio' ? 0 : target.getBoundingClientRect().top + window.pageYOffset - off;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }, true);
+
   ROOT.addEventListener('click', function (e) {
     var a = e.target.closest('a[data-col]');
     if (a) setCol(a.getAttribute('data-col'));
