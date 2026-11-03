@@ -312,7 +312,7 @@
     var valid = seasonTabs.some(function (x) { return x.id === state.col; }) || state.col === 'todas' || used[state.col];
     if (!valid) state.col = seasonTabs.length ? 'temp:actual' : 'todas';
     var sNames = seasonTabs.map(function (x) { return norm(x.name); });
-    var all = seasonTabs.concat([{ id: 'todas', name: 'Todas' }]).concat(COLS.filter(function (c) { return used[c.id] && sNames.indexOf(norm(c.name)) < 0; }));
+    var all = [{ id: 'todas', name: 'Todas' }].concat(seasonTabs).concat(COLS.filter(function (c) { return used[c.id] && sNames.indexOf(norm(c.name)) < 0; }));
     tabsEl.innerHTML = all.map(function (c) {
       return '<button type="button" class="tab' + (c.season ? ' season' : '') + '" data-id="' + c.id + '" aria-pressed="' + (state.col === c.id && !state.q) + '">' + esc(c.name) + '</button>';
     }).join('');
