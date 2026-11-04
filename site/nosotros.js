@@ -40,7 +40,7 @@
     '#nos .btn-wine{background:var(--wine);color:#fff}#nos .btn-wine:hover{background:var(--wine-d)}',
     '#nos .btn-out{border-color:var(--ink);color:var(--ink)}',
     '#nos a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}',
-    '@media (max-width:860px){#nos .hero{padding-top:36px}#nos .gal{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:24px 0}#nos .gal img:first-child{grid-column:span 2;aspect-ratio:16/11}#nos .gal img{border-radius:14px}#nos .btns{flex-direction:column;align-items:stretch}#nos .cta{padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}}'
+    '@media (max-width:860px){#nos .hero{padding-top:36px}#nos .gal{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:24px 0}#nos .gal img:first-child,#nos .gal img:last-child{grid-column:span 2;aspect-ratio:16/11}#nos .gal img{border-radius:14px}#nos .btns{flex-direction:column;align-items:stretch}#nos .cta{padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}}'
   ].join('');
 
   var style = document.createElement('style');
