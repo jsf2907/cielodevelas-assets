@@ -56,6 +56,9 @@
   var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   var DEFAULT_SEASON = { nombre: 'Entre temporadas', entre: true, titular: 'Velas hechas a mano en Medellín', subtitulo: 'Diseños únicos para tu hogar y para regalar.', coleccion: '', refs: [] };
   function slug(s) { return norm(String(s || '')).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  // Fotos claras (fondo blanco): portada luminosa. Valor = versión vertical para celular.
+  var BRIGHT = { 'temporada-velitas-navidad-laura': 'temporada-velitas-navidad-laura-movil' };
+  function brightMobile(t) { var k = String(t.imagen || '').trim().replace(/\.(jpe?g|png|webp)$/i, ''); return BRIGHT[k] || ''; }
   function seasonImg(t) { return t.imagen ? imgUrl(t.imagen) : IMG + 'temporada-' + slug(t.nombre) + '.jpg'; }
   function daysTo(f) {
     if (!f) return null;
@@ -203,6 +206,9 @@
     '#cdv .slogan{display:none}',
     '@media (max-width:860px){#cdv .brand{flex:0 0 auto}#cdv .nav-in{gap:12px}#cdv .slogan{display:block;flex:1 1 auto;min-width:0;margin:0 auto 0 0;padding-left:12px;border-left:1px solid #E3CDB8;font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:12.5px;line-height:1.3;color:var(--wine);text-wrap:balance;max-width:260px}}',
     '@media (max-width:380px){#cdv .slogan{font-size:12px;padding-left:9px}}',
+    '#cdv .hero-card picture{position:absolute;inset:0}',
+    '#cdv .hero-card.bright::after{background:linear-gradient(90deg,rgba(43,26,20,.84) 0%,rgba(43,26,20,.58) 36%,rgba(43,26,20,0) 60%)}',
+    '@media (max-width:860px){#cdv .hero-card.bright{min-height:0;flex-direction:column;align-items:stretch;background:#F3F1F2}#cdv .hero-card.bright picture{position:relative;order:2;display:block;aspect-ratio:900/1180;margin-top:-40px}#cdv .hero-card.bright img{object-position:center bottom}#cdv .hero-card.bright::after{display:none}#cdv .hero-card.bright .hero-txt{order:1;padding:28px 22px 8px;gap:14px;color:var(--ink)}#cdv .hero-card.bright .hero-txt h1{color:var(--ink)}#cdv .hero-card.bright .hero-txt .script{color:var(--wine)}#cdv .hero-card.bright .hero-txt p{color:var(--muted)}#cdv .hero-card.bright .btn-ghost{color:var(--ink);border-color:var(--ink)}}',
     '#cdv .tabbar{display:none}',
     '@media (max-width:860px){#cdv .float{display:none}#cdv .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,248,239,.97);backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #EFE0CF;box-shadow:0 -6px 20px rgba(43,34,32,.08);padding:6px 4px calc(8px + env(safe-area-inset-bottom,0px))}#cdv .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;transition:color .2s ease}#cdv .tabbar a.on{color:var(--wine)}#cdv .tabbar a.wa{color:#1F7A4D}#cdv footer{padding-bottom:calc(36px + 72px + env(safe-area-inset-bottom,0px))}}',
     '@media (prefers-reduced-motion:reduce){#cdv *{transition:none!important}}'
@@ -334,8 +340,11 @@
     var kicker = t.entre ? 'Hechas a mano en Medellín' : (d === 0 ? '¡Es hoy!' : d === 1 ? 'Falta 1 día' : d > 1 ? 'Faltan ' + d + ' días' : t.nombre);
     var waSeason = t.entre ? GENERAL : waLink('Hola Cielo de Velas, quiero hacer un pedido para ' + t.nombre + '.');
     var hasList = seasonList(t).length > 0;
-    ROOT.querySelector('#cdv-hero').innerHTML =
-      '<img src="' + esc(seasonImg(t)) + '" alt="' + esc(t.titular || t.nombre) + '" fetchpriority="high" onerror="this.onerror=null;this.src=\'' + IMG + 'hero-regalos.jpg\'">' +
+    var mob = brightMobile(t), heroEl = ROOT.querySelector('#cdv-hero');
+    heroEl.classList.toggle('bright', !!mob);
+    var heroImg = '<img src="' + esc(seasonImg(t)) + '" alt="' + esc(t.titular || t.nombre) + '" fetchpriority="high" onerror="this.onerror=null;this.src=\'' + IMG + 'hero-regalos.jpg\'">';
+    heroEl.innerHTML =
+      (mob ? '<picture><source media="(max-width:860px)" srcset="' + IMG + mob + '.jpg">' + heroImg + '</picture>' : heroImg) +
       '<div class="hero-txt"><p class="script">' + esc(kicker) + '</p><h1>' + esc(t.titular || t.nombre) + '</h1>' +
       (t.subtitulo ? '<p>' + esc(t.subtitulo) + '</p>' : '') +
       '<div class="row"><a class="btn btn-wine" href="#catalogo" data-col="' + (hasList ? 'temp:actual' : 'todas') + '">Ver colección</a>' +
