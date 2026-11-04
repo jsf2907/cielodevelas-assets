@@ -7,6 +7,17 @@
   var IMG = BASE + 'img/';
   var WA = '573225911307';
   var IG = 'https://www.instagram.com/cielo.develas';
+  var FB = 'https://www.facebook.com/profile.php?id=61571799055866';
+  var EMAIL = 'cielodevelas@gmail.com';
+  var G_REVIEW = 'https://g.page/r/CZSiTK5KIj11EAI/review';
+  var G_PROFILE = 'https://g.page/r/CZSiTK5KIj11EAI';
+  // Reseñas reales de Google (elegidas por Jenson, 4 nov 2026). Nombre, insignia, texto, nota.
+  var REVIEWS = [
+    ['Estefania C.', '', '¡Me encantaron las velas! Son hermosas y su fragancia es increíble. Ya van 15 días desde que abrí la mía y la habitación todavía huele delicioso. Tienen la mejor variedad y los precios son excelentes. Se nota que están hechas con amor 🧡', 'Traducida del inglés'],
+    ['Juan C.', 'Local Guide', 'Cielo de Velas hizo de nuestra boda algo simplemente mágico. Las velas eran elegantes y meticulosamente elaboradas, y crearon una luz cálida y romántica que transformó por completo el ambiente.', 'Traducida'],
+    ['Claudia C.', 'Local Guide', 'Velas hermosas, originales, creativas y para todos los gustos. ¡Gracias!', 'Traducida del inglés']
+  ];
+  var G_RATING = '5,0', G_COUNT = 449;
   // Datos en vivo: pestaña "Web" de la hoja Cielo_de_Velas_-_Ventas_y_Gastos (Apps Script, archivo Web.gs).
   var FEED = 'https://script.google.com/macros/s/AKfycbzI6w4KqoWFt6ZVrCg9TTOMEUcBpCWJFHZiKHO3z69z52catv57n7dq4bhmksfz4ljBAg/exec';
   // Copia de respaldo por si la hoja no responde.
@@ -80,9 +91,9 @@
   function shortName(t) { return t.entre ? (t.coleccion || 'Destacadas') : t.nombre; }
 
   var COLORS = [
-    ['Blanco', '#FFFFFF'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
-    ['Salvia', '#9FC3A0'], ['Lavanda', '#C9C1EC'], ['Morado', '#6D5BD0'],
-    ['Topo', '#B9A39C'], ['Vainilla', '#F6E3BF'], ['Durazno', '#EEB98F']
+    ['Cera natural', '#FFFDF8'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
+    ['Verde', '#3F8F5A'], ['Lavanda', '#C9C1EC'], ['Morado', '#6D5BD0'],
+    ['Beige', '#D8C3A5'], ['Amarillo', '#FFD42A'], ['Naranja', '#F28C38']
   ];
 
   function money(n) { return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
@@ -100,6 +111,10 @@
   var ICON_GRID = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>';
   var ICON_GIFT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3 8 4.5 9.5 8 12 8zm0 0s1.5-5 4-3.5S14.5 8 12 8z"/></svg>';
   var ICON_EVENT = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/></svg>';
+  var ICON_MAIL = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+  var ICON_PIN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  var ICON_FB = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z"/></svg>';
+  var ICON_STAR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>';
   var ICON_IG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>';
   var ICON_SEARCH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
@@ -192,11 +207,33 @@
     '#cdv .step{background:#fff;border:1px solid #EFE0CF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px}',
     '#cdv .step b{width:48px;height:48px;border-radius:50%;background:var(--wine);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-size:22px}',
     '#cdv .step strong{font-size:19px}#cdv .step span{color:var(--muted)}',
-    '#cdv footer{background:var(--ink);color:#EADBD0;padding:56px 0 36px}',
-    '#cdv .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px}',
-    '#cdv .foot img{width:120px}',
-    '#cdv .foot a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--cream);padding:6px 0}',
-    '#cdv .fine{border-top:1px solid #4A3D39;margin-top:32px;padding-top:20px;font-size:14px;color:#BFAFA5}',
+    '#cdv .reviews{background:var(--cream)}',
+    '#cdv .rating{display:inline-flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:8px;background:#fff;border:1px solid #EFE0CF;border-radius:999px;padding:8px 16px;font-weight:700;font-size:15px;margin-top:16px}',
+    '#cdv .gword{font-weight:800;letter-spacing:-.01em}#cdv .gword b:nth-child(1),#cdv .gword b:nth-child(4){color:#4285F4}#cdv .gword b:nth-child(2),#cdv .gword b:nth-child(6){color:#EA4335}#cdv .gword b:nth-child(3){color:#FBBC05}#cdv .gword b:nth-child(5){color:#34A853}',
+    '#cdv .stars{color:#E8A93B;letter-spacing:1px}',
+    '#cdv .revs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:32px}',
+    '#cdv .rev{background:#fff;border:1px solid #EFE0CF;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}',
+    '#cdv .rev-top{display:flex;align-items:center;gap:12px}',
+    '#cdv .av{flex:0 0 40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px}',
+    '#cdv .rev-top div{display:flex;flex-direction:column;line-height:1.25;flex:1;min-width:0}#cdv .rev-top b{font-size:15px}#cdv .rev-top small{font-size:12.5px;color:var(--muted)}',
+    '#cdv .rev p{margin:0;font-size:15.5px;line-height:1.6}',
+    '#cdv .rev .tr{font-size:12px;color:var(--muted);font-style:italic;margin-top:auto}',
+    '#cdv .revdots{display:none}',
+    '#cdv .revbtns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:32px}',
+    '#cdv .btn-out{border-color:var(--ink);color:var(--ink);background:transparent}',
+    '@media (max-width:860px){#cdv .revs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:24px -20px 0;padding:0 20px 6px;scrollbar-width:none}#cdv .revs::-webkit-scrollbar{display:none}#cdv .rev{flex:0 0 84%;scroll-snap-align:start;padding:18px}#cdv .rev p{font-size:15px}#cdv .revdots{display:flex;justify-content:center;gap:6px;margin-top:12px}#cdv .revdots i{width:7px;height:7px;border-radius:50%;background:#D9C4B1;transition:background .2s ease}#cdv .revdots i.on{background:var(--wine)}#cdv .revbtns{flex-direction:column;align-items:stretch;margin-top:24px}#cdv .revbtns .btn{width:100%;box-sizing:border-box}}',
+    '#cdv footer{background:var(--ink);color:#E7D6CA;padding:64px 0 36px;font-size:15px;line-height:1.6}',
+    '#cdv .ft-grid{display:grid;grid-template-columns:1.4fr 1.2fr 1fr 1fr;gap:40px}',
+    '#cdv .ft-brand{display:flex;flex-direction:column;gap:14px;max-width:360px}#cdv .ft-brand img{width:110px;height:auto}#cdv .ft-brand p{margin:0;color:#D9C8BC}#cdv .ft-brand em{font-family:"Fraunces",Georgia,serif;font-style:italic;color:var(--gold);font-size:17px;line-height:1.45}',
+    '#cdv footer h4{margin:0 0 14px;font-family:"Nunito Sans",system-ui,sans-serif;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}',
+    '#cdv .ft-row{display:flex;align-items:center;gap:14px;min-height:52px;color:var(--cream);text-decoration:none}#cdv .ft-row+.ft-row{margin-top:6px}',
+    '#cdv .ft-row .ic{flex:0 0 40px;height:40px;border-radius:50%;background:rgba(230,194,122,.12);display:grid;place-items:center;color:var(--gold)}',
+    '#cdv .ft-row .tx{display:flex;flex-direction:column;line-height:1.35;min-width:0;word-break:break-word}#cdv .ft-row .tx small{font-size:12px;font-weight:600;color:#BFAEA2;letter-spacing:.04em}',
+    '#cdv a.ft-row:hover .tx span{text-decoration:underline}',
+    '#cdv .social{display:grid;grid-template-columns:1fr 1fr;gap:10px}#cdv .social a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:1px solid rgba(231,214,202,.28);border-radius:12px;color:var(--cream);font-weight:700;font-size:15px;text-decoration:none}#cdv .social a svg{color:var(--gold)}#cdv .social a:hover{border-color:var(--gold)}',
+    '#cdv .ft-links{display:flex;flex-direction:column}#cdv .ft-links a{min-height:40px;display:flex;align-items:center;color:var(--cream);text-decoration:none}#cdv .ft-links a:hover{color:var(--gold)}',
+    '#cdv .fine{border-top:1px solid rgba(231,214,202,.14);margin-top:40px;padding-top:22px;font-size:13px;line-height:1.7;color:#A8968A}',
+    '@media (max-width:860px){#cdv footer{padding-top:44px}#cdv .ft-grid{grid-template-columns:1fr;gap:0}#cdv .ft-grid>div{padding:24px 0;border-top:1px solid rgba(231,214,202,.14)}#cdv .ft-grid>.ft-brand{padding:0 0 28px;border-top:0}#cdv .ft-brand img{width:96px}#cdv .ft-links{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}#cdv .ft-links a{min-height:44px;border-bottom:1px solid rgba(231,214,202,.08)}#cdv .fine{text-align:center;margin-top:8px;font-size:12px}}',
     '#cdv .float{position:fixed;right:18px;bottom:18px;z-index:30;display:flex;align-items:center;gap:8px;background:#1F7A4D;color:#fff;text-decoration:none;font-weight:700;padding:14px 18px;border-radius:999px;box-shadow:0 10px 28px rgba(0,0,0,.22)}',
     '@media (max-width:860px){#cdv .links{display:none}#cdv .hero-txt{padding:32px 24px}#cdv .hero-card{min-height:560px}#cdv .hero-card::after{background:linear-gradient(0deg,rgba(43,26,20,.9) 0%,rgba(43,26,20,.55) 60%,rgba(43,26,20,.15) 100%)}#cdv .brand span{display:none}#cdv .search{flex:1 1 100%}}',
     '@media (max-width:520px){#cdv .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}#cdv .meta{flex-direction:column;gap:2px}#cdv .meta h3{font-size:17px}#cdv .card .btn{font-size:14px;padding:10px}#cdv .float span{display:none}#cdv .float{padding:15px}#cdv section.block{padding:48px 0}}',
@@ -283,10 +320,24 @@
         '<div class="step"><b>3</b><strong>Confirmamos tu pedido</strong><span>Te confirmamos disponibilidad, forma de pago y entrega.</span></div>' +
       '</div><div class="center" style="margin-top:30px"><a class="btn btn-wine" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Escribir por WhatsApp</a></div>' +
     '</div></section>' +
-    '<footer><div class="wrap"><div class="foot">' +
-      '<div style="max-width:360px;display:flex;flex-direction:column;gap:14px"><img src="' + IMG + 'logo-crema.png" alt="Cielo de Velas" width="120" height="115"><p>Velas artesanales hechas a mano en Medellín con materias primas naturales y certificadas.</p></div>' +
-      '<div><p style="font-weight:700;color:var(--cream);margin-bottom:8px">Contacto</p><a href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + '+57 322 591 1307</a><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + '@cielo.develas</a></div>' +
-    '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp. © ' + new Date().getFullYear() + ' Cielo de Velas.</p></div></footer>' +
+    '<section id="resenas" class="block reviews"><div class="wrap"><div class="center"><p class="script" style="font-size:36px;color:var(--wine)">Lo que dicen de nosotros</p><h2 style="font-size:clamp(30px,4vw,44px)">Reseñas en Google</h2>' +
+      '<a class="rating" href="' + G_PROFILE + '" target="_blank" rel="noopener" style="text-decoration:none;color:var(--ink)"><span class="gword"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span>' + G_RATING + ' <span class="stars" aria-label="5 estrellas">★★★★★</span> · ' + G_COUNT + ' reseñas</a></div>' +
+      '<div class="revs">' + REVIEWS.map(function (r, i) {
+        return '<article class="rev"><div class="rev-top"><span class="av" style="background:' + ['#B5305A', '#2F4A3A', '#6D5BD0'][i % 3] + '">' + esc(r[0].charAt(0)) + '</span><div><b>' + esc(r[0]) + '</b><small>' + esc(r[1] || 'Reseña de Google') + '</small></div></div>' +
+          '<span class="stars" aria-label="5 estrellas">★★★★★</span><p>' + esc(r[2]) + '</p>' + (r[3] ? '<span class="tr">' + esc(r[3]) + '</span>' : '') + '</article>';
+      }).join('') + '</div>' +
+      '<div class="revdots" aria-hidden="true">' + REVIEWS.map(function (r, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('') + '</div>' +
+      '<div class="revbtns"><a class="btn btn-wine" href="' + G_REVIEW + '" target="_blank" rel="noopener">' + ICON_STAR + 'Déjanos tu reseña</a><a class="btn btn-out" href="' + G_PROFILE + '" target="_blank" rel="noopener">Ver todas en Google</a></div>' +
+    '</div></section>' +
+    '<footer><div class="wrap"><div class="ft-grid">' +
+      '<div class="ft-brand"><img src="' + IMG + 'logo-crema.png" alt="Cielo de Velas" width="110" height="105"><p>Velas artesanales hechas a mano en Medellín con materias primas naturales y certificadas.</p><em>“Por cada vela que enciendes, nace una luz en el cielo.”</em></div>' +
+      '<div><h4>Contacto</h4>' +
+        '<a class="ft-row" href="' + GENERAL + '" target="_blank" rel="noopener"><span class="ic">' + ICON_WA + '</span><span class="tx"><small>WhatsApp</small><span>+57 322 591 1307</span></span></a>' +
+        '<a class="ft-row" href="mailto:' + EMAIL + '"><span class="ic">' + ICON_MAIL + '</span><span class="tx"><small>Correo</small><span>' + EMAIL + '</span></span></a>' +
+        '<div class="ft-row"><span class="ic">' + ICON_PIN + '</span><span class="tx"><small>Ubicación</small><span>Medellín, Colombia</span></span></div></div>' +
+      '<div><h4>Síguenos</h4><div class="social"><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + 'Instagram</a><a href="' + FB + '" target="_blank" rel="noopener">' + ICON_FB + 'Facebook</a></div></div>' +
+      '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
+    '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp.<br>© ' + new Date().getFullYear() + ' Cielo de Velas · Medellín, Colombia</p></div></footer>' +
     '<a class="float" href="' + GENERAL + '" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">' + ICON_WA + '<span>Pedir por WhatsApp</span></a>' +
     '<nav class="tabbar" aria-label="Secciones">' +
       '<a href="#inicio" data-spy="inicio" class="on">' + ICON_HOME + 'Inicio</a>' +
@@ -386,6 +437,17 @@
     var y = id === 'inicio' ? 0 : target.getBoundingClientRect().top + window.pageYOffset - off;
     window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
   }, true);
+
+  // Reseñas (celular): puntos que siguen la tarjeta visible.
+  (function () {
+    var rv = ROOT.querySelector('.revs'), dots = [].slice.call(ROOT.querySelectorAll('.revdots i'));
+    if (!rv || !dots.length) return;
+    rv.addEventListener('scroll', function () {
+      var c = rv.children[0]; if (!c) return;
+      var i = Math.round(rv.scrollLeft / (c.getBoundingClientRect().width + 12));
+      dots.forEach(function (d, k) { d.classList.toggle('on', k === Math.min(i, dots.length - 1)); });
+    }, { passive: true });
+  })();
 
   // Barra inferior (solo celular): resalta la sección visible.
   (function () {
