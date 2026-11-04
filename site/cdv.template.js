@@ -278,7 +278,7 @@
     '<header class="nav"><div class="nav-in">' +
       '<a class="brand" href="#inicio" aria-label="Cielo de Velas, inicio"><img src="' + IMG + 'logo.png" alt="Logo Cielo de Velas" width="58" height="55"><span>Cielo de velas</span></a>' +
       '<p class="slogan">Por cada vela que enciendes, nace una luz en el cielo.</p>' +
-      '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a></nav>' +
+      '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#nosotros">Nosotros</a></nav>' +
       '<a class="btn btn-dark" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
     '</div></header>' +
     '<div id="inicio" class="hero"><div class="hero-card" id="cdv-hero"></div></div>' +
@@ -336,7 +336,7 @@
         '<a class="ft-row" href="mailto:' + EMAIL + '"><span class="ic">' + ICON_MAIL + '</span><span class="tx"><small>Correo</small><span>' + EMAIL + '</span></span></a>' +
         '<div class="ft-row"><span class="ic">' + ICON_PIN + '</span><span class="tx"><small>Ubicación</small><span>Medellín, Colombia</span></span></div></div>' +
       '<div><h4>Síguenos</h4><div class="social"><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + 'Instagram</a><a href="' + FB + '" target="_blank" rel="noopener">' + ICON_FB + 'Facebook</a></div></div>' +
-      '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
+      '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="#nosotros">Sobre nosotros</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
     '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp.<br>© ' + new Date().getFullYear() + ' Cielo de Velas · Medellín, Colombia</p></div></footer>' +
     '<a class="float" href="' + GENERAL + '" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">' + ICON_WA + '<span>Pedir por WhatsApp</span></a>' +
     '<nav class="tabbar" aria-label="Secciones">' +
