@@ -68,13 +68,12 @@
     if (location.hash) location.hash = '';
     else window.scrollTo(0, 0);
     if (go === 'inicio') { setTimeout(function () { window.scrollTo(0, 0); }, 60); return; }
-    var tries = 0;
-    (function jump() {
+    // Carrd devuelve la página arriba ~0,1 s después de cambiar de sección: esperamos y repetimos.
+    function jump() {
       var t = document.getElementById(go), head = document.querySelector('#cdv header.nav');
-      if (t && t.getBoundingClientRect().height) {
-        window.scrollTo(0, t.getBoundingClientRect().top + window.pageYOffset - (head ? head.offsetHeight + 8 : 0));
-      } else if (tries++ < 20) setTimeout(jump, 50);
-    })();
+      if (t && t.getBoundingClientRect().height) window.scrollTo(0, t.getBoundingClientRect().top + window.pageYOffset - (head ? head.offsetHeight + 8 : 0));
+    }
+    [400, 1000].forEach(function (ms) { setTimeout(jump, ms); });
   });
 
   if (typeof window.fbq === 'function') { try { window.fbq('trackCustom', 'NosotrosView'); } catch (err) {} }
