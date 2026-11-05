@@ -60,10 +60,12 @@
     '</div>';
 
   // Volver a la página principal (Carrd: "#" = sección de inicio) y, si se pide, bajar a una sección de #cdv.
-  ROOT.addEventListener('click', function (e) {
-    var a = e.target.closest('[data-go]');
+  // Captura en window: así nos adelantamos al manejador de enlaces "#" de Carrd.
+  window.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('#nos [data-go]');
     if (!a) return;
     e.preventDefault();
+    e.stopImmediatePropagation();
     var go = a.getAttribute('data-go');
     if (location.hash) location.hash = '';
     else window.scrollTo(0, 0);
@@ -74,7 +76,7 @@
       if (t && t.getBoundingClientRect().height) window.scrollTo(0, t.getBoundingClientRect().top + window.pageYOffset - (head ? head.offsetHeight + 8 : 0));
     }
     [400, 1000].forEach(function (ms) { setTimeout(jump, ms); });
-  });
+  }, true);
 
   if (typeof window.fbq === 'function') { try { window.fbq('trackCustom', 'NosotrosView'); } catch (err) {} }
 })();
