@@ -593,7 +593,7 @@
     '#cdvx .specs b{display:block;font-family:"Fraunces",Georgia,serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}',
     '#cdvx .specs small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}',
     '#cdvx .info{display:flex;flex-direction:column;gap:10px;font-size:14px}#cdvx .info div{display:flex;gap:10px;align-items:flex-start}#cdvx .info svg{flex:0 0 auto;color:var(--pine);margin-top:2px}',
-    '#cdvx .note{background:var(--sand);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.55;color:#4a3c36}',
+    '#cdvx .note{background:var(--sand);border-radius:14px;padding:16px 18px;font-size:14px;line-height:1.6;color:#4a3c36;display:flex;flex-direction:column;gap:10px;max-width:62ch}#cdvx .note p{margin:0}',
     '#cdvx h2{font-family:"Fraunces",Georgia,serif;font-size:21px;font-weight:600;margin:6px 0 12px}',
     '#cdvx .rel{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}#cdvx .rel::-webkit-scrollbar{display:none}',
     '#cdvx .rel a{flex:0 0 136px;color:inherit;text-decoration:none}#cdvx .rel img{width:136px;height:136px;object-fit:cover;border-radius:12px;background:var(--sand);display:block}',
@@ -681,7 +681,8 @@
           '<div class="info"><div>' + ICON_TRUCK + '<span><b>Envíos a toda Colombia.</b> Tu pedido está listo en unos 7 días.</span></div>' +
             '<div>' + ICON_BANK + '<span><b>Pago por transferencia</b> Bancolombia, al confirmar tu pedido por WhatsApp.</span></div>' +
             '<div>' + ICON_HAND + '<span><b>Hecha a mano en Medellín.</b></span></div></div>' +
-          '<div class="note">Cada vela es única. Al ser hecha a mano, puede tener pequeñas variaciones de color o de acabado. Eso la hace especial.</div>' +
+          '<div class="note"><p>Nuestras velas están elaboradas artesanalmente con cera de origen vegetal, reflejando nuestro compromiso con una producción más consciente con el medio ambiente.</p>' +
+            '<p>Cada vela es hecha y decorada a mano en nuestro taller en Medellín. Por su proceso artesanal, pueden presentar ligeras variaciones en los colores y diseños, haciendo de cada pieza una creación única y especial.</p></div>' +
           '<div class="bar"><div class="t">Total<b class="tt">' + money(p.p) + '</b></div><button type="button" class="add">Agregar al carrito</button></div>' +
           (rel.length ? '<div><h2>También te puede gustar</h2><div class="rel">' + rel.map(function (o) { return '<a href="' + prodHref(o) + '" data-vela="' + o.r + '"><img loading="lazy" src="' + esc(o.img) + '" alt=""><span>' + esc(o.n) + '</span><em>' + money(o.p) + '</em></a>'; }).join('') + '</div></div>' : '') +
         '</div>' +
