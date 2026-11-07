@@ -567,7 +567,7 @@
     '#cdvx .cbadge{position:absolute;top:-5px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--wine);color:#fff;font:700 11px/19px "Nunito Sans",system-ui,sans-serif;text-align:center}',
     '#cdvx .pp-in{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:0}',
     '@media (min-width:861px){#cdvx .pp-in{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;padding:32px 32px 60px}#cdvx .gal{border-radius:18px;overflow:hidden}#cdvx .pp-body{padding:0!important}}',
-    '#cdvx .gal{position:relative;background:var(--sand)}',
+    '#cdvx .pp-in>div{min-width:0}#cdvx .gal{position:relative;background:var(--sand);min-width:0;width:100%}#cdvx .track{min-width:0;width:100%}',
     '#cdvx .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}#cdvx .track::-webkit-scrollbar{display:none}',
     '#cdvx .track img{flex:0 0 100%;width:100%;aspect-ratio:1/1;object-fit:cover;scroll-snap-align:center;display:block}',
     '#cdvx .cnt{position:absolute;right:12px;bottom:12px;background:rgba(43,34,32,.72);color:#fff;font-size:12px;padding:4px 10px;border-radius:20px;font-variant-numeric:tabular-nums}',
