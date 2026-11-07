@@ -256,6 +256,10 @@
     '#cdv .hcart{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid #E6D3BF;background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:0 0 auto}',
     '#cdv .cbadge{position:absolute;top:-5px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--wine);color:#fff;font:700 11px/19px "Nunito Sans",system-ui,sans-serif;text-align:center}',
     '#cdv .tabbar a.cart{color:var(--wine)}#cdv .tabbar .ci{position:relative;display:inline-grid}',
+    '#cdv .hcart{width:auto;padding:0 18px 0 14px;gap:8px;display:flex;align-items:center;border-radius:999px;font:700 15px "Nunito Sans",system-ui,sans-serif}',
+    '#cdv .hcart .cbadge{position:static;margin-left:2px}',
+    '#cdv .fcart{border:0;cursor:pointer;background:var(--wine);font:700 15px "Nunito Sans",system-ui,sans-serif;box-shadow:0 10px 28px rgba(140,47,57,.3)}#cdv .fcart:hover{background:var(--wine-d)}#cdv .fcart .cbadge{position:static;background:#fff;color:var(--wine)}',
+    '#cdv .askwa{margin:16px 0 0;font-size:14px;color:var(--muted)}#cdv .askwa a{color:var(--wine);font-weight:700}',
     '@media (max-width:860px){#cdv .hcart{display:none}}',
     '@media (prefers-reduced-motion:reduce){#cdv *{transition:none!important}}'
   ].join('\n');
@@ -287,8 +291,7 @@
       '<a class="brand" href="#inicio" aria-label="Cielo de Velas, inicio"><img src="' + IMG + 'logo.png" alt="Logo Cielo de Velas" width="58" height="55"><span>Cielo de velas</span></a>' +
       '<p class="slogan">Por cada vela que enciendes, nace una luz en el cielo.</p>' +
       '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#nosotros">Nosotros</a></nav>' +
-      '<a class="btn btn-dark" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
-      '<button type="button" class="hcart" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<b class="cbadge" hidden>0</b></button>' +
+      '<button type="button" class="hcart" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<span>Carrito</span><b class="cbadge" hidden>0</b></button>' +
     '</div></header>' +
     '<div id="inicio" class="hero"><div class="hero-card" id="cdv-hero"></div></div>' +
     '<div class="nextbar" id="cdv-next"></div>' +
@@ -324,10 +327,11 @@
     '</div></section>' +
     '<section id="pedir" class="block" style="background:var(--sand)"><div class="wrap"><div class="center"><p class="script" style="font-size:36px;color:var(--wine)">Así de fácil</p><h2 style="font-size:clamp(30px,4vw,44px)">Cómo hacer tu pedido</h2></div>' +
       '<div class="steps">' +
-        '<div class="step"><b>1</b><strong>Elige tu vela</strong><span>Recorre el catálogo y toca “Pedir por WhatsApp” en la que te guste.</span></div>' +
-        '<div class="step"><b>2</b><strong>Escoge el color</strong><span>Dinos en el chat cuál de los 9 colores quieres.</span></div>' +
-        '<div class="step"><b>3</b><strong>Confirmamos tu pedido</strong><span>Te confirmamos disponibilidad, forma de pago y entrega.</span></div>' +
-      '</div><div class="center" style="margin-top:30px"><a class="btn btn-wine" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Escribir por WhatsApp</a></div>' +
+        '<div class="step"><b>1</b><strong>Elige tu vela</strong><span>Toca una vela, mira sus fotos y agrégala al carrito.</span></div>' +
+        '<div class="step"><b>2</b><strong>Escoge el color</strong><span>En la página de cada vela eliges uno de los 9 colores.</span></div>' +
+        '<div class="step"><b>3</b><strong>Envía tu pedido</strong><span>Completa tus datos y envíanos el carrito por WhatsApp. Te confirmamos disponibilidad, envío y pago.</span></div>' +
+      '</div><div class="center" style="margin-top:30px"><a class="btn btn-wine" href="#catalogo" data-col="todas">Ver catálogo</a>' +
+      '<p class="askwa">¿Tienes una pregunta o un pedido especial? <a href="' + waLink('Hola Cielo de Velas, tengo una pregunta.') + '" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p></div>' +
     '</div></section>' +
     '<section id="resenas" class="block reviews"><div class="wrap"><div class="center"><p class="script" style="font-size:36px;color:var(--wine)">Lo que dicen de nosotros</p><h2 style="font-size:clamp(30px,4vw,44px)">Reseñas en Google</h2>' +
       '<a class="rating" href="' + G_PROFILE + '" target="_blank" rel="noopener" style="text-decoration:none;color:var(--ink)"><span class="gword"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span>' + G_RATING + ' <span class="stars" aria-label="5 estrellas">★★★★★</span> · ' + G_COUNT + ' reseñas</a></div>' +
@@ -347,7 +351,7 @@
       '<div><h4>Síguenos</h4><div class="social"><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + 'Instagram</a><a href="' + FB + '" target="_blank" rel="noopener">' + ICON_FB + 'Facebook</a></div></div>' +
       '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="#nosotros">Sobre nosotros</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
     '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp.<br>© ' + new Date().getFullYear() + ' Cielo de Velas · Medellín, Colombia</p></div></footer>' +
-    '<a class="float" href="' + GENERAL + '" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">' + ICON_WA + '<span>Pedir por WhatsApp</span></a>' +
+    '<button type="button" class="float fcart" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<span>Ver carrito</span><b class="cbadge" hidden>0</b></button>' +
     '<nav class="tabbar" aria-label="Secciones">' +
       '<a href="#inicio" data-spy="inicio" class="on">' + ICON_HOME + 'Inicio</a>' +
       '<a href="#catalogo" data-spy="catalogo">' + ICON_GRID + 'Catálogo</a>' +
@@ -408,7 +412,7 @@
       '<div class="hero-txt"><p class="script">' + esc(kicker) + '</p><h1>' + esc(t.titular || t.nombre) + '</h1>' +
       (t.subtitulo ? '<p>' + esc(t.subtitulo) + '</p>' : '') +
       '<div class="row"><a class="btn btn-wine" href="#catalogo" data-col="' + (hasList ? 'temp:actual' : 'todas') + '">Ver colección</a>' +
-      '<a class="btn btn-ghost" href="' + waSeason + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir por WhatsApp</a></div></div>';
+      '<a class="btn btn-ghost" href="#catalogo" data-col="todas">Ver catálogo completo</a></div></div>';
     ROOT.querySelector('#cdv-next').innerHTML = (nx && nx.nombre !== t.nombre) ?
       '<a href="#catalogo" data-col="temp:siguiente">' + (t.entre ? 'Ya llega ' : 'Después: ') + esc(nx.nombre) + ' · ' + dateTxt(nx.fecha) + '<b>Ver colección →</b></a>' : '';
     ROOT.querySelector('#cdv-top').textContent = t.entre ?
