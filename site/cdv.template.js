@@ -692,6 +692,14 @@
     updateBadges();
 
     var tr = ppEl.querySelector('.track'), cnt = ppEl.querySelector('.cnt'), th = [].slice.call(ppEl.querySelectorAll('.thumbs button'));
+    // Si una foto de la galería no carga, se usa la foto principal del catálogo; si esa tampoco, se quita
+    [].slice.call(ppEl.querySelectorAll('.track img, .thumbs img')).forEach(function (im) {
+      im.addEventListener('error', function () {
+        var main = im.closest('.thumbs') ? p.img.replace(/=w\d+$/, '=w200') : bigImg(p.img);
+        if (!im.getAttribute('data-fb') && im.src !== main) { im.setAttribute('data-fb', '1'); im.src = main; return; }
+        var b = im.closest('.thumbs button'); if (b) b.hidden = true; else im.style.objectFit = 'contain';
+      });
+    });
     tr.addEventListener('scroll', function () {
       var i = Math.round(tr.scrollLeft / Math.max(1, tr.clientWidth));
       if (cnt) cnt.textContent = (i + 1) + ' / ' + imgs.length;
