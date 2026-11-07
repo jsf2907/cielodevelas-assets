@@ -623,7 +623,22 @@
     '#cdvx .sm{font-size:12.5px;color:var(--muted);line-height:1.45}',
     '#cdvx .mayor{background:var(--sand);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.45}#cdvx .mayor a{color:var(--wine);font-weight:700}',
     '#cdvx .go{min-height:54px;border-radius:28px;border:0;background:#1F7A4D;color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}',
-    '#cdvx .go[aria-disabled="true"]{opacity:.45;pointer-events:none}',
+    '#cdvx .go[aria-disabled="true"]{opacity:.45;pointer-events:none}#cdvx .go.wait{opacity:.6}',
+    '#cdvx .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}#cdvx .scroll .ls{overflow:visible;flex:none}',
+    '#cdvx .datos{padding:6px 18px 18px;display:flex;flex-direction:column;gap:10px}',
+    '#cdvx .datos h4{font-family:"Fraunces",Georgia,serif;font-size:18px;font-weight:600;margin:10px 0 0}',
+    '#cdvx .datos .sub{font-size:12.5px;color:var(--muted);margin:-6px 0 2px}',
+    '#cdvx .datos label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}',
+    '#cdvx .datos input[type=text],#cdvx .datos input[type=email],#cdvx .datos input[type=tel]{font:16px "Nunito Sans",system-ui,sans-serif;color:var(--ink);background:#fff;border:1px solid #D9C7B3;border-radius:12px;padding:12px 14px;min-height:48px;width:100%;text-transform:none;letter-spacing:0}',
+    '#cdvx .datos input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}',
+    '#cdvx .datos input.bad{border-color:var(--wine);background:#FFF3F3}',
+    '#cdvx .datos .ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink);cursor:pointer}',
+    '#cdvx .datos .ok input{width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--wine)}',
+    '#cdvx .datos .ok.bad{color:var(--wine)}#cdvx .datos .ok a{color:var(--wine);font-weight:700}',
+    '#cdvx .err{background:#FFF3F3;border:1px solid #E7B8BC;color:var(--wine);border-radius:10px;padding:10px 12px;font-size:13px}',
+    '#cdvx .pv{position:fixed;inset:0;z-index:2147483003;background:var(--cream);overflow-y:auto;-webkit-overflow-scrolling:touch}',
+    '#cdvx .pv-in{max-width:720px;margin:0 auto;padding:16px max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px))}',
+    '#cdvx .pv h2{font-size:26px;margin:14px 0 6px}#cdvx .pv h3{font-family:"Fraunces",Georgia,serif;font-size:18px;font-weight:600;margin:20px 0 6px}#cdvx .pv p{margin:0 0 10px;font-size:15px;line-height:1.65;max-width:65ch}',
     '#cdvx .kp{background:none;border:0;font-size:14px;text-decoration:underline;padding:6px}',
     '@media (prefers-reduced-motion:reduce){#cdvx *{transition:none!important}}'
   ].join('\n');
@@ -742,7 +757,9 @@
 
   function cartMessage() {
     var L = cartLines();
+    var d = datos;
     return 'Hola Cielo de Velas, quiero hacer este pedido:\n' +
+      (d.nombre ? 'Nombre: ' + d.nombre + '\nCiudad: ' + d.ciudad + '\nCorreo: ' + d.email + '\nWhatsApp: ' + d.whatsapp + '\n\n' : '') +
       L.map(function (l) { return '• ' + l.q + ' × ' + l.p.n + ' (Ref. ' + ref3(l.p.r) + '), color ' + l.c + ': ' + money(l.p.p * l.q); }).join('\n') +
       '\nTotal velas: ' + money(cartTotal()) + '\nEnvío: por confirmar\n(Código web CARRITO)';
   }
@@ -759,9 +776,72 @@
     }).join('') : '<div class="empty">Tu carrito está vacío.<br>Toca una vela del catálogo para elegir el color y agregarla.</div>';
     csEl.querySelector('.tot').textContent = money(cartTotal());
     var go = csEl.querySelector('.go');
-    go.setAttribute('href', L.length ? waLink(cartMessage()) : '#');
     go.setAttribute('aria-disabled', L.length ? 'false' : 'true');
+    var dz = csEl.querySelector('.datos'); if (dz) dz.hidden = !L.length;
+    refreshGo();
     updateBadges();
+  }
+  // ---------- datos del cliente (Ley 1581: solo se guardan si acepta) ----------
+  var DATOS_KEY = 'cdv_datos_v1';
+  var datos = { nombre: '', ciudad: '', email: '', whatsapp: '' };
+  try { var dsv = JSON.parse(localStorage.getItem(DATOS_KEY) || 'null'); if (dsv) Object.keys(datos).forEach(function (k) { datos[k] = String(dsv[k] || ''); }); } catch (e) {}
+  function telDigits(s) { var d = String(s || '').replace(/\D/g, ''); if (d.length === 12 && d.indexOf('57') === 0) d = d.slice(2); return d; }
+  function readDatos() {
+    if (!csEl) return;
+    ['nombre', 'ciudad', 'email', 'whatsapp'].forEach(function (k) { var i = csEl.querySelector('#cdv-' + k); if (i) datos[k] = i.value.replace(/\s+/g, ' ').trim(); });
+    try { localStorage.setItem(DATOS_KEY, JSON.stringify(datos)); } catch (e) {}
+  }
+  function datosErrores() {
+    var e = [];
+    if (datos.nombre.length < 2) e.push('nombre');
+    if (datos.ciudad.length < 2) e.push('ciudad');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(datos.email)) e.push('email');
+    var t = telDigits(datos.whatsapp); if (t.length < 7 || t.length > 13) e.push('whatsapp');
+    var ac = csEl && csEl.querySelector('#cdv-acepta'); if (!ac || !ac.checked) e.push('acepta');
+    return e;
+  }
+  function refreshGo() {
+    if (!csEl) return;
+    var go = csEl.querySelector('.go');
+    var okDatos = !datosErrores().length;
+    go.classList.toggle('wait', !okDatos);
+    go.setAttribute('href', cartLines().length && okDatos ? waLink(cartMessage()) : '#');
+  }
+  function showErrores(errs) {
+    var nombres = { nombre: 'tu nombre', ciudad: 'tu ciudad', email: 'un correo válido', whatsapp: 'tu número de WhatsApp', acepta: 'aceptar la política de datos' };
+    ['nombre', 'ciudad', 'email', 'whatsapp'].forEach(function (k) { var i = csEl.querySelector('#cdv-' + k); if (i) i.classList.toggle('bad', errs.indexOf(k) > -1); });
+    var ok = csEl.querySelector('.datos .ok'); if (ok) ok.classList.toggle('bad', errs.indexOf('acepta') > -1);
+    var box = csEl.querySelector('.datos .err');
+    box.textContent = 'Para enviar tu pedido falta: ' + errs.map(function (k) { return nombres[k]; }).join(', ') + '.';
+    box.hidden = false;
+    var first = errs[0] === 'acepta' ? csEl.querySelector('#cdv-acepta') : csEl.querySelector('#cdv-' + errs[0]);
+    if (first) { first.scrollIntoView({ block: 'center' }); try { first.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function enviarDatos() {
+    var payload = JSON.stringify({ nombre: datos.nombre, ciudad: datos.ciudad, email: datos.email, whatsapp: datos.whatsapp, acepta: true,
+      items: cartLines().map(function (l) { return { r: l.p.r, n: l.p.n, c: l.c, q: l.q, p: l.p.p }; }) });
+    if (FEED.indexOf('http') !== 0) return;
+    try {
+      if (navigator.sendBeacon && navigator.sendBeacon(FEED, new Blob([payload], { type: 'text/plain;charset=utf-8' }))) return;
+    } catch (e) {}
+    try { fetch(FEED, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: payload }); } catch (e) {}
+  }
+  function openPrivacy() {
+    var old = X.querySelector('.pv'); if (old) old.remove();
+    var pv = document.createElement('div');
+    pv.className = 'pv'; pv.setAttribute('role', 'dialog'); pv.setAttribute('aria-modal', 'true'); pv.setAttribute('aria-label', 'Política de privacidad');
+    pv.innerHTML = '<div class="pp-top"><button type="button" class="ib" data-x="priv" aria-label="Cerrar">' + ICON_BACK + '</button><span class="crumb">Privacidad</span><span style="width:42px"></span></div>' +
+      '<div class="pv-in"><h2>Política de tratamiento de datos personales</h2>' +
+      '<p>Cielo de Velas cumple la Ley 1581 de 2012 y el Decreto 1377 de 2013 de Colombia sobre protección de datos personales.</p>' +
+      '<h3>Responsable</h3><p>Cielo de Velas (Laura Foti), Medellín, Colombia. Correo: cielodevelas@gmail.com · WhatsApp: +57 322 591 1307.</p>' +
+      '<h3>Qué datos recogemos</h3><p>Cuando envías un pedido desde la página: tu nombre, ciudad, correo electrónico y número de WhatsApp, junto con las velas que elegiste.</p>' +
+      '<h3>Para qué los usamos</h3><p>Para atender y coordinar tu pedido: confirmarlo, cotizar el envío, hacer la factura si la pides y entregarlo. También para contarte de vez en cuando sobre nuevas colecciones y temporadas; puedes pedirnos que no te escribamos más en cualquier momento.</p>' +
+      '<p>No vendemos tus datos. Solo los compartimos con la transportadora cuando hay un envío, y únicamente lo necesario para entregarlo.</p>' +
+      '<h3>Tus derechos</h3><p>Puedes conocer, actualizar y corregir tus datos, pedir que los borremos y retirar tu autorización. Escríbenos a cielodevelas@gmail.com o por WhatsApp y te respondemos en un máximo de 15 días hábiles.</p>' +
+      '<h3>Medición de la página</h3><p>Usamos herramientas de medición (Meta Pixel y Microsoft Clarity) para entender cómo se usa la página y mejorar nuestros anuncios. Estas herramientas no reciben tu nombre, correo ni teléfono desde nuestro formulario.</p>' +
+      '<h3>Vigencia</h3><p>Esta política rige desde noviembre de 2026.</p></div>';
+    X.appendChild(pv);
+    var b = pv.querySelector('.ib'); if (b) b.focus({ preventScroll: true });
   }
   function openCart() {
     if (csEl) return;
@@ -770,7 +850,14 @@
     csEl.innerHTML = '<button type="button" class="shade" data-x="cart" aria-label="Cerrar carrito"></button>' +
       '<div class="sheet" role="dialog" aria-modal="true" aria-label="Tu pedido"><div class="grab" aria-hidden="true"></div>' +
       '<div class="hd"><div><h3>Tu pedido</h3><span class="sm cn"></span></div><button type="button" class="ib" data-x="cart" aria-label="Cerrar carrito">' + ICON_X + '</button></div>' +
-      '<div class="ls"></div>' +
+      '<div class="scroll"><div class="ls"></div>' +
+      '<div class="datos"><h4>Tus datos para el pedido</h4><p class="sub">Los usamos solo para atender tu pedido.</p>' +
+        '<label class="f">Nombre<input type="text" id="cdv-nombre" autocomplete="name" maxlength="80" value="' + esc(datos.nombre) + '"></label>' +
+        '<label class="f">Ciudad<input type="text" id="cdv-ciudad" autocomplete="address-level2" maxlength="60" value="' + esc(datos.ciudad) + '"></label>' +
+        '<label class="f">Correo<input type="email" id="cdv-email" autocomplete="email" inputmode="email" maxlength="100" value="' + esc(datos.email) + '"></label>' +
+        '<label class="f">WhatsApp<input type="tel" id="cdv-whatsapp" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="300 123 4567" value="' + esc(datos.whatsapp) + '"></label>' +
+        '<label class="ok"><input type="checkbox" id="cdv-acepta"><span>Acepto el tratamiento de mis datos personales según la <a href="#" data-priv="1">política de privacidad</a> (Ley 1581 de 2012).</span></label>' +
+        '<div class="err" role="alert" hidden></div></div></div>' +
       '<div class="ft"><div class="row"><span>Total</span><span class="tot"></span></div>' +
         '<div class="sm">El envío se confirma por WhatsApp según tu ciudad. Pago por transferencia Bancolombia.</div>' +
         '<div class="mayor">Para pedidos al por mayor, <a href="' + WHOLESALE + '" target="_blank" rel="noopener" data-fb="mayor">escríbenos</a> y te damos el precio.</div>' +
@@ -779,6 +866,8 @@
     X.appendChild(csEl);
     lockScroll(true);
     renderCart();
+    csEl.querySelector('.datos').addEventListener('input', function () { readDatos(); refreshGo(); var b = csEl.querySelector('.datos .err'); if (b && !b.hidden && !datosErrores().length) b.hidden = true; });
+    csEl.querySelector('#cdv-acepta').addEventListener('change', function () { refreshGo(); var b = csEl.querySelector('.datos .err'); if (b && !b.hidden && !datosErrores().length) b.hidden = true; });
     var c = csEl.querySelector('.hd .ib'); if (c) c.focus({ preventScroll: true });
   }
   function closeCart(silent) {
@@ -800,14 +889,21 @@
     var oc = t.closest && t.closest('[data-cart="open"]');
     if (oc && (ROOT.contains(oc) || X.contains(oc))) { e.preventDefault(); e.stopImmediatePropagation(); openCart(); return; }
     if (!X.contains(t)) return;
+    var pl = t.closest('[data-priv]');
+    if (pl) { e.preventDefault(); openPrivacy(); return; }
     var xb = t.closest('[data-x]');
-    if (xb) { e.preventDefault(); if (xb.getAttribute('data-x') === 'cart') closeCart(); else closeProduct(); return; }
+    if (xb) { e.preventDefault(); var w = xb.getAttribute('data-x'); if (w === 'priv') { var pv = X.querySelector('.pv'); if (pv) pv.remove(); } else if (w === 'cart') closeCart(); else closeProduct(); return; }
     var d = t.closest('[data-d]');
     if (d) { var l = cartLines()[Number(d.getAttribute('data-k'))]; if (l) { cart.forEach(function (c) { if (c.r === l.p.r && c.c === l.c) c.q = Math.max(1, Math.min(99, c.q + Number(d.getAttribute('data-d')))); }); saveCart(); renderCart(); } return; }
     var del = t.closest('[data-del]');
     if (del) { var m = cartLines()[Number(del.getAttribute('data-del'))]; if (m) { cart = cart.filter(function (c) { return !(c.r === m.p.r && c.c === m.c); }); saveCart(); renderCart(); } return; }
     var go = t.closest('a.go');
     if (go && go.getAttribute('aria-disabled') !== 'true') {
+      readDatos();
+      var errs = datosErrores();
+      if (errs.length) { e.preventDefault(); showErrores(errs); return; }
+      go.setAttribute('href', waLink(cartMessage()));
+      enviarDatos();
       var L = cartLines();
       pix('InitiateCheckout', { content_ids: L.map(function (x) { return ref3(x.p.r); }), content_type: 'product', num_items: cartCount(), value: cartTotal(), currency: 'COP' });
       pix('Contact', { content_category: 'pedido_carrito', value: cartTotal(), currency: 'COP' });
@@ -818,7 +914,8 @@
   }, true);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (csEl) closeCart(); else if (ppEl) closeProduct();
+    var pv = X.querySelector('.pv');
+    if (pv) pv.remove(); else if (csEl) closeCart(); else if (ppEl) closeProduct();
   });
   window.addEventListener('popstate', function (e) {
     var r = e.state && e.state.cdvVela;
