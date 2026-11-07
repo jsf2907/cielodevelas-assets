@@ -26,22 +26,22 @@
     '#nos .top img{width:58px;height:auto;display:block}',
     '#nos .back{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 4px;font-weight:700;font-size:15px;color:var(--wine);text-decoration:none}',
     '#nos .wrap{max-width:980px;margin:0 auto;padding:0 20px}',
-    '#nos .hero{text-align:center;padding:48px 0 12px}',
+    '#nos .hero{text-align:center;padding:56px 0 8px}',
     '#nos .script{font-family:"Pinyon Script",cursive;font-size:40px;line-height:1;color:var(--wine);display:block}',
     '#nos h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,54px);line-height:1.08;margin:6px 0 12px;letter-spacing:-.01em}',
     '#nos .hero p{color:var(--muted);font-size:17px;max-width:440px;margin:0 auto}',
     '#nos .lead{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:24px;margin:28px 0 8px;background:var(--sand)}',
-    '#nos .story{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding:40px 0 8px}',
+    '#nos .story{max-width:720px;margin:0 auto;padding:28px 0 8px}',
     '#nos .story p,#nos .close p{font-size:18px;line-height:1.75;margin:0 0 18px;color:var(--ink);max-width:62ch}',
     '#nos .story img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:35% 50%;border-radius:24px;display:block;background:var(--sand)}',
-    '#nos .homenaje{text-align:center;padding:40px 0;margin:24px 0;border-top:1px solid #EAD8C4;border-bottom:1px solid #EAD8C4}',
+    '#nos .homenaje{text-align:center;padding:40px 0;margin:24px auto;max-width:720px;border-top:1px solid #EAD8C4;border-bottom:1px solid #EAD8C4}',
     '#nos .homenaje p{font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:clamp(21px,2.6vw,27px);line-height:1.5;color:var(--wine);max-width:720px;margin:0 auto}',
     '#nos .homenaje .star{display:block;color:var(--gold);font-size:22px;margin-bottom:12px}',
-    '#nos .close{max-width:760px;margin:0 auto;padding:8px 0 0;text-align:center}#nos .close p{margin:0 auto}',
+    '#nos .close{max-width:720px;margin:0 auto;padding:8px 0 48px}#nos .close p{margin:0}',
     '#nos .galt{text-align:center;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(24px,3vw,30px);margin:56px 0 0}',
     '#nos .gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:32px 0}',
     '#nos .gal img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:18px;display:block;background:var(--sand)}',
-    '#nos .cta{text-align:center;padding:8px 0 72px}',
+    '#nos .cta{text-align:center;padding:32px 0 72px;max-width:720px;margin:0 auto;border-top:1px solid #EAD8C4}',
     '#nos .cta p{font-family:"Fraunces",Georgia,serif;font-style:italic;color:var(--wine);font-size:20px;line-height:1.45;margin:0 auto 20px;max-width:440px}',
     '#nos .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}',
     '#nos .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:13px 24px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:1.5px solid transparent;cursor:pointer}',
@@ -60,15 +60,13 @@
       '<a class="back" href="#" data-go="inicio">← Volver al inicio</a></div>' +
     '<div class="wrap">' +
       '<div class="hero"><span class="script">Sobre nosotros</span><h1>Nuestra Historia</h1></div>' +
-      '<img class="lead" src="' + IMG + 'nosotros-taller.jpg" alt="Taller de Cielo de Velas en Medellín con velas hechas a mano" width="1448" height="1086">' +
       '<div class="story"><div>' +
         '<p>Cielo de Velas nació en Medellín en 2025, de un amor especial por las velas y la curiosidad de crear una con mis propias manos. Lo que comenzó como un pasatiempo se convirtió en una pasión por la artesanía, la creatividad y los pequeños detalles.</p>' +
         '<p>Con los materiales que sobraron de aquella primera vela, elaboré mis primeras creaciones para vender: una caja de seis velitas de deseos para celebrar el tradicional Día de las Velitas en Colombia.</p>' +
-      '</div><img loading="lazy" src="' + IMG + 'nosotros-laura.jpg" alt="Velas de Cielo de Velas hechas a mano en el taller" width="1448" height="1086"></div>' +
+      '</div></div>' +
       '<div class="homenaje"><span class="star" aria-hidden="true">✦</span><p>Su nombre está inspirado en alguien muy especial que hoy está en el cielo, como un homenaje al amor, y a los recuerdos.</p></div>' +
       '<div class="close"><p>Hoy creamos velas artesanales con materias primas de alta calidad, fragancias cuidadosamente seleccionadas y una atención especial a cada detalle, buscando que cada pieza sea tan única como la historia que hay detrás de ella.</p></div>' +
-      '<h2 class="galt">Algunas de nuestras creaciones</h2>' +
-      '<div class="gal">' + FOTOS.map(function (f) { return '<img loading="lazy" src="' + IMG + f[0] + '" alt="' + f[1] + '">'; }).join('') + '</div>' +
+
       '<div class="cta"><p>“Por cada vela que enciendes, nace una luz en el cielo.”</p>' +
         '<div class="btns"><a class="btn btn-wine" href="#" data-go="catalogo">Ver catálogo</a>' +
         '<a class="btn btn-out" href="' + WA + '" target="_blank" rel="noopener">' + ICON_WA + 'Escríbenos por WhatsApp</a></div></div>' +
