@@ -52,7 +52,8 @@
   }
   function normalize(items) {
     return (items || []).map(function (i) {
-      return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String) };
+      return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String),
+        x: String(i.x || ''), a: Number(i.a) || 0, w: Number(i.w) || 0, g: Number(i.g) || 0, fs: (i.fs || []).map(String).filter(String), k: (i.k || []).map(String) };
     }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
   }
   var PRODUCTS = normalize(FALLBACK);
@@ -116,6 +117,7 @@
   var ICON_FB = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V10H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z"/></svg>';
   var ICON_STAR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>';
   var ICON_IG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>';
+  var ICON_CART = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h2.6l2.3 11.2a1.6 1.6 0 0 0 1.6 1.3h8.6a1.6 1.6 0 0 0 1.6-1.2l1.6-7.3H6.2"/></svg>';
   var ICON_SEARCH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
   var css = [
@@ -248,15 +250,21 @@
     '@media (max-width:860px){#cdv .hero-card.bright{min-height:0;flex-direction:column;align-items:stretch;background:#F3F1F2}#cdv .hero-card.bright picture{position:relative;order:2;display:block;aspect-ratio:900/1180;margin-top:-40px}#cdv .hero-card.bright img{object-position:center bottom}#cdv .hero-card.bright::after{display:none}#cdv .hero-card.bright .hero-txt{order:1;padding:28px 22px 8px;gap:14px;color:var(--ink)}#cdv .hero-card.bright .hero-txt h1{color:var(--ink)}#cdv .hero-card.bright .hero-txt .script{color:var(--wine)}#cdv .hero-card.bright .hero-txt p{color:var(--muted)}#cdv .hero-card.bright .btn-ghost{color:var(--ink);border-color:var(--ink)}}',
     '#cdv .tabbar{display:none}',
     '@media (max-width:860px){#cdv .float{display:none}#cdv .tabbar{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,248,239,.97);backdrop-filter:saturate(1.2) blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid #EFE0CF;box-shadow:0 -6px 20px rgba(43,34,32,.08);padding:6px 4px calc(8px + env(safe-area-inset-bottom,0px))}#cdv .tabbar a{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;transition:color .2s ease}#cdv .tabbar a.on{color:var(--wine)}#cdv .tabbar a.wa{color:#1F7A4D}#cdv footer{padding-bottom:calc(36px + 72px + env(safe-area-inset-bottom,0px))}}',
+    '#cdv a.ph{display:block;color:inherit;text-decoration:none;cursor:pointer}',
+    '#cdv .cartbtn{width:46px;height:46px;border-radius:50%;border:0;background:var(--wine);color:#fff;display:grid;place-items:center;margin:2px auto 0;cursor:pointer;box-shadow:0 4px 12px rgba(140,47,57,.25);transition:background .2s ease,transform .15s ease}#cdv .cartbtn:hover{background:var(--wine-d)}#cdv .cartbtn:active{transform:scale(.94)}#cdv .cartbtn:focus-visible,#cdv .hcart:focus-visible{outline:3px solid var(--gold);outline-offset:2px}',
+    '#cdv .hcart{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid #E6D3BF;background:#fff;color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:0 0 auto}',
+    '#cdv .cbadge{position:absolute;top:-5px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--wine);color:#fff;font:700 11px/19px "Nunito Sans",system-ui,sans-serif;text-align:center}',
+    '#cdv .tabbar a.cart{color:var(--wine)}#cdv .tabbar .ci{position:relative;display:inline-grid}',
+    '@media (max-width:860px){#cdv .hcart{display:none}}',
     '@media (prefers-reduced-motion:reduce){#cdv *{transition:none!important}}'
   ].join('\n');
 
   function card(p) {
     var top = p.top ? '<span class="tag">Más vendida</span>' : '';
     return '<article class="card">' +
-      '<div class="ph">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></div>' +
+      '<a class="ph" href="' + prodHref(p) + '" data-vela="' + p.r + '" aria-label="Ver ' + esc(p.n) + '">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></a>' +
       '<div class="meta"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></div>' +
-      '<a class="btn btn-wine" href="' + orderLink(p) + '" target="_blank" rel="noopener" data-fb="pedido" data-n="' + esc(p.n) + '" data-p="' + p.p + '">' + ICON_WA + '<span class="lg">Pedir por WhatsApp</span><span class="sm">Pedir</span></a>' +
+      '<button type="button" class="cartbtn" data-vela="' + p.r + '" aria-label="Elegir color y agregar ' + esc(p.n) + ' al carrito">' + ICON_CART + '</button>' +
       '</article>';
   }
 
@@ -280,6 +288,7 @@
       '<p class="slogan">Por cada vela que enciendes, nace una luz en el cielo.</p>' +
       '<nav class="links" aria-label="Principal"><a href="#catalogo" data-col="temp:actual" id="cdv-navseason">Temporada</a><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#nosotros">Nosotros</a></nav>' +
       '<a class="btn btn-dark" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
+      '<button type="button" class="hcart" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<b class="cbadge" hidden>0</b></button>' +
     '</div></header>' +
     '<div id="inicio" class="hero"><div class="hero-card" id="cdv-hero"></div></div>' +
     '<div class="nextbar" id="cdv-next"></div>' +
@@ -289,7 +298,7 @@
       '<div class="grid" id="cdv-feat">' + featured().map(card).join('') + '</div>' +
     '</div></section>' +
     '<section id="catalogo" class="block" style="background:#fff;border-top:1px solid #EFE0CF;border-bottom:1px solid #EFE0CF"><div class="wrap">' +
-      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub"><span id="cdv-total">' + PRODUCTS.length + '</span> diseños hechos a mano. Todos disponibles en 9 colores: nos dices cuál al pedir.</p></div></div>' +
+      '<div class="head"><div><span class="script">Nuestro catálogo</span><h2>Una vela para cada momento</h2><p class="sub"><span id="cdv-total">' + PRODUCTS.length + '</span> diseños hechos a mano. Toca una vela para ver sus fotos, elegir el color y agregarla al carrito.</p></div></div>' +
       '<div class="tools"><div class="tabs" role="group" aria-label="Colecciones"></div>' +
       '<label class="search"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Buscar una vela</span>' + ICON_SEARCH + '<input type="search" placeholder="Buscar: reno, ángel, peonía..." autocomplete="off"></label></div>' +
       '<p class="count" aria-live="polite"></p><div class="grid" id="cdv-grid"></div>' +
@@ -344,7 +353,7 @@
       '<a href="#catalogo" data-spy="catalogo">' + ICON_GRID + 'Catálogo</a>' +
       '<a href="#regalos" data-spy="regalos">' + ICON_GIFT + 'Regalos</a>' +
       '<a href="#eventos" data-spy="eventos">' + ICON_EVENT + 'Eventos</a>' +
-      '<a class="wa" href="' + GENERAL + '" target="_blank" rel="noopener">' + ICON_WA + 'Pedir</a>' +
+      '<a class="cart" href="#carrito" data-cart="open">' + '<span class="ci">' + ICON_CART + '<b class="cbadge" hidden>0</b></span>' + 'Carrito</a>' +
     '</nav>';
 
   var style = document.createElement('style');
@@ -498,6 +507,330 @@
   });
   renderSeason(); renderTabs(); renderGrid();
 
+  // =========================================================================
+  // Página de producto + carrito (nov 2026)
+  // - Cada vela tiene su página: cielodevelas.com/?vela=001 (se puede compartir)
+  // - El carrito vive en el celular del cliente (localStorage) y se envía por WhatsApp
+  // - Colores: los 9 estándar; si la columna Colores de la pestaña Web tiene una
+  //   lista, solo esos (siempre dentro de los 9).
+  // =========================================================================
+  var CART_KEY = 'cdv_carrito_v1';
+  var WHOLESALE = waLink('Hola Cielo de Velas, quiero hacer un pedido al por mayor. ¿Me pueden dar el precio? Velas y cantidades: ');
+  function ref3(r) { return ('00' + r).slice(-3); }
+  function prodHref(p) { return '?vela=' + ref3(p.r); }
+  function byRef(r) { r = Number(r); for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].r === r) return PRODUCTS[i]; return null; }
+  function bigImg(u) { return String(u).replace(/=w\d+$/, '=w1200'); }
+  function cm(n) { return String(n).replace('.', ',') + ' cm'; }
+  function colorsFor(p) {
+    var wanted = (p.k || []).map(norm);
+    var list = COLORS.filter(function (c) { return !wanted.length || wanted.indexOf(norm(c[0])) > -1; });
+    return list.length ? list : COLORS;
+  }
+  function pix(ev, data) { try { if (typeof window.fbq === 'function') window.fbq('track', ev, data); } catch (e) {} }
+
+  // ---------- carrito ----------
+  var cart = [];
+  try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]') || []; } catch (e) { cart = []; }
+  cart = cart.filter(function (l) { return l && l.r && l.q > 0; });
+  function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+  function cartLines() {
+    return cart.map(function (l) { var p = byRef(l.r); return p ? { p: p, c: l.c, q: l.q } : null; }).filter(Boolean);
+  }
+  function cartCount() { return cartLines().reduce(function (s, l) { return s + l.q; }, 0); }
+  function cartTotal() { return cartLines().reduce(function (s, l) { return s + l.q * l.p.p; }, 0); }
+  function addToCart(p, color, q) {
+    var hit = null;
+    cart.forEach(function (l) { if (l.r === p.r && l.c === color) hit = l; });
+    if (hit) hit.q += q; else cart.push({ r: p.r, c: color, q: q });
+    saveCart(); updateBadges();
+    pix('AddToCart', { content_ids: [ref3(p.r)], content_type: 'product', content_name: p.n, value: p.p * q, currency: 'COP' });
+  }
+  function updateBadges() {
+    var n = cartCount();
+    [].slice.call(document.querySelectorAll('#cdv .cbadge, #cdvx .cbadge')).forEach(function (b) { b.textContent = n; b.hidden = !n; });
+  }
+
+  // ---------- capa (página de producto y carrito) ----------
+  var X = document.createElement('div');
+  X.id = 'cdvx';
+  document.body.appendChild(X);
+  var xs = document.createElement('style');
+  xs.textContent = [
+    '#cdvx{--ink:#2B2220;--muted:#6B5A52;--cream:#FFF8EF;--sand:#F6E7D6;--wine:#8C2F39;--wine-d:#6E222B;--gold:#E6C27A;--pine:#2F4A3A;--line:#EADBC9;font-family:"Nunito Sans",system-ui,-apple-system,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;text-align:left;line-height:1.55}',
+    '#cdvx *{box-sizing:border-box}#cdvx [hidden]{display:none!important}',
+    '#cdvx button{font:inherit;color:inherit;cursor:pointer}',
+    '#cdvx .pp{position:fixed;inset:0;z-index:2147483000;background:var(--cream);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}',
+    '#cdvx .pp-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));padding-top:calc(10px + env(safe-area-inset-top,0px));background:rgba(255,248,239,.95);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #F0E2D2}',
+    '#cdvx .ib{position:relative;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;flex:0 0 auto}',
+    '#cdvx .ib:focus-visible,#cdvx .sw:focus-visible,#cdvx .add:focus-visible,#cdvx .go:focus-visible{outline:3px solid var(--gold);outline-offset:2px}',
+    '#cdvx .crumb{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '#cdvx .cbadge{position:absolute;top:-5px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--wine);color:#fff;font:700 11px/19px "Nunito Sans",system-ui,sans-serif;text-align:center}',
+    '#cdvx .pp-in{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:0}',
+    '@media (min-width:861px){#cdvx .pp-in{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;padding:32px 32px 60px}#cdvx .gal{border-radius:18px;overflow:hidden}#cdvx .pp-body{padding:0!important}}',
+    '#cdvx .gal{position:relative;background:var(--sand)}',
+    '#cdvx .track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}#cdvx .track::-webkit-scrollbar{display:none}',
+    '#cdvx .track img{flex:0 0 100%;width:100%;aspect-ratio:1/1;object-fit:cover;scroll-snap-align:center;display:block}',
+    '#cdvx .cnt{position:absolute;right:12px;bottom:12px;background:rgba(43,34,32,.72);color:#fff;font-size:12px;padding:4px 10px;border-radius:20px;font-variant-numeric:tabular-nums}',
+    '#cdvx .thumbs{display:flex;gap:8px;padding:10px 16px 0}',
+    '@media (min-width:861px){#cdvx .thumbs{padding:12px 0 0}}',
+    '#cdvx .thumbs button{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:none;opacity:.6;width:60px;height:60px}',
+    '#cdvx .thumbs button.on{border-color:var(--wine);opacity:1}#cdvx .thumbs img{width:100%;height:100%;object-fit:cover;display:block}',
+    '#cdvx .pp-body{padding:18px max(18px,env(safe-area-inset-right,0px)) 130px max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:18px}',
+    '#cdvx .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--pine);font-weight:700}',
+    '#cdvx h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(28px,6vw,40px);line-height:1.05;margin:4px 0 0;letter-spacing:-.01em;text-wrap:balance}',
+    '#cdvx .ref{font-size:12.5px;color:var(--muted);margin-top:6px}',
+    '#cdvx .price{font-family:"Fraunces",Georgia,serif;font-size:28px;color:var(--wine);font-weight:600;font-variant-numeric:tabular-nums}',
+    '#cdvx .lbl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:10px}',
+    '#cdvx .sws{display:flex;gap:10px;flex-wrap:wrap}',
+    '#cdvx .sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #D9C7B3;padding:0}',
+    '#cdvx .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--wine)}',
+    '#cdvx .swn{font-size:14px;margin-top:8px;font-weight:600}',
+    '#cdvx .qty{display:inline-flex;align-items:center;border:1px solid #D9C7B3;border-radius:28px;background:#fff}',
+    '#cdvx .qty button{width:44px;height:44px;font-size:20px;background:none;border:0}#cdvx .qty span{min-width:28px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}',
+    '#cdvx .desc{margin:0;font-size:15.5px;line-height:1.65;max-width:62ch}',
+    '#cdvx .specs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}',
+    '#cdvx .specs div{padding:12px 8px;text-align:center;border-left:1px solid #F0E2D2}#cdvx .specs div:first-child{border-left:0}',
+    '#cdvx .specs b{display:block;font-family:"Fraunces",Georgia,serif;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}',
+    '#cdvx .specs small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}',
+    '#cdvx .info{display:flex;flex-direction:column;gap:10px;font-size:14px}#cdvx .info div{display:flex;gap:10px;align-items:flex-start}#cdvx .info svg{flex:0 0 auto;color:var(--pine);margin-top:2px}',
+    '#cdvx .note{background:var(--sand);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.55;color:#4a3c36}',
+    '#cdvx h2{font-family:"Fraunces",Georgia,serif;font-size:21px;font-weight:600;margin:6px 0 12px}',
+    '#cdvx .rel{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}#cdvx .rel::-webkit-scrollbar{display:none}',
+    '#cdvx .rel a{flex:0 0 136px;color:inherit;text-decoration:none}#cdvx .rel img{width:136px;height:136px;object-fit:cover;border-radius:12px;background:var(--sand);display:block}',
+    '#cdvx .rel span{display:block;font-size:13px;margin-top:6px;line-height:1.3}#cdvx .rel em{font-style:normal;color:var(--wine);font-weight:700;font-size:13px}',
+    '#cdvx .bar{position:fixed;left:0;right:0;bottom:0;z-index:2147483001;background:#fff;border-top:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;gap:14px;align-items:center;box-shadow:0 -6px 20px rgba(43,34,32,.08)}',
+    '@media (min-width:861px){#cdvx .bar{position:static;border:0;box-shadow:none;padding:0;background:none}}',
+    '#cdvx .bar .t{font-size:12px;color:var(--muted)}#cdvx .bar .t b{display:block;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}',
+    '#cdvx .add{flex:1;min-height:52px;border-radius:28px;border:0;background:var(--wine);color:#fff;font-weight:700;font-size:16px;transition:background .2s ease}#cdvx .add:hover{background:var(--wine-d)}#cdvx .add.ok{background:var(--pine)}',
+    // carrito
+    '#cdvx .cs{position:fixed;inset:0;z-index:2147483002}',
+    '#cdvx .shade{position:absolute;inset:0;background:rgba(43,34,32,.45);border:0;width:100%;padding:0}',
+    '#cdvx .sheet{position:absolute;left:0;right:0;bottom:0;max-height:90%;background:var(--cream);border-radius:22px 22px 0 0;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.2)}',
+    '@media (min-width:861px){#cdvx .sheet{left:auto;top:0;bottom:0;width:440px;max-height:none;border-radius:0}}',
+    '#cdvx .grab{width:40px;height:4px;border-radius:2px;background:#D9C7B3;margin:10px auto 0}',
+    '#cdvx .hd{display:flex;justify-content:space-between;align-items:center;padding:10px 18px 12px;border-bottom:1px solid #F0E2D2}',
+    '#cdvx .hd h3{font-family:"Fraunces",Georgia,serif;font-size:24px;font-weight:600;margin:0}',
+    '#cdvx .ls{overflow-y:auto;padding:4px 18px;flex:1;-webkit-overflow-scrolling:touch}',
+    '#cdvx .it{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;padding:14px 0;border-bottom:1px solid #F0E2D2;align-items:center}',
+    '#cdvx .it img{width:72px;height:72px;border-radius:12px;object-fit:cover;background:var(--sand)}',
+    '#cdvx .nm{font-weight:700;font-size:15px;line-height:1.25}',
+    '#cdvx .mt{font-size:12.5px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px}#cdvx .mt i{width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 1px #D9C7B3;display:inline-block}',
+    '#cdvx .it .qty{margin-top:8px}#cdvx .it .qty button{width:34px;height:34px;font-size:17px}#cdvx .it .qty span{min-width:22px}',
+    '#cdvx .pr{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}#cdvx .pr button{display:block;margin:10px 0 0 auto;background:none;border:0;padding:4px 0;font-size:12.5px;color:var(--wine);text-decoration:underline}',
+    '#cdvx .empty{padding:36px 8px;text-align:center;color:var(--muted)}',
+    '#cdvx .ft{padding:14px 18px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:#fff;display:flex;flex-direction:column;gap:10px}',
+    '#cdvx .row{display:flex;justify-content:space-between;align-items:baseline;font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}',
+    '#cdvx .sm{font-size:12.5px;color:var(--muted);line-height:1.45}',
+    '#cdvx .mayor{background:var(--sand);border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.45}#cdvx .mayor a{color:var(--wine);font-weight:700}',
+    '#cdvx .go{min-height:54px;border-radius:28px;border:0;background:#1F7A4D;color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}',
+    '#cdvx .go[aria-disabled="true"]{opacity:.45;pointer-events:none}',
+    '#cdvx .kp{background:none;border:0;font-size:14px;text-decoration:underline;padding:6px}',
+    '@media (prefers-reduced-motion:reduce){#cdvx *{transition:none!important}}'
+  ].join('\n');
+  document.head.appendChild(xs);
+
+  var ICON_BACK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+  var ICON_X = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  var ICON_TRUCK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>';
+  var ICON_BANK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-5 9 5M5 10v8M19 10v8M9.5 10v8M14.5 10v8M3 20h18"/></svg>';
+  var ICON_HAND = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1.5 2 3 3.6 3 5.6A3 3 0 0 1 12 12a3 3 0 0 1-3-3.4C9 6.6 10.5 5 12 3zM8 14h8v7H8z"/></svg>';
+
+  var curRef = null, curSig = '';
+  var ppEl = null, csEl = null, pushed = false, lastFocus = null, scrollY0 = 0;
+  function lockScroll(on) {
+    if (on) { scrollY0 = window.pageYOffset; document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; }
+    else if (!ppEl && !csEl) { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; }
+  }
+
+  function openProduct(r, fromHistory) {
+    var p = byRef(r);
+    if (!p) return false;
+    closeCart(true);
+    if (!ppEl) lastFocus = document.activeElement;
+    if (ppEl) ppEl.remove();
+    curRef = p.r; curSig = JSON.stringify(p);
+    var imgs = (p.fs.length ? p.fs.map(imgUrl) : [p.img]).map(bigImg);
+    var cols = colorsFor(p);
+    var sel = cols[0][0], q = 1;
+    var specs = [];
+    if (p.a) specs.push('<div><b>' + cm(p.a) + '</b><small>Alto</small></div>');
+    if (p.w) specs.push('<div><b>' + cm(p.w) + '</b><small>Ancho</small></div>');
+    if (p.g) specs.push('<div><b>' + p.g + ' g</b><small>Cera</small></div>');
+    var rel = PRODUCTS.filter(function (o) { return o.c === p.c && o.r !== p.r; }).slice(0, 8);
+    ppEl = document.createElement('div');
+    ppEl.className = 'pp';
+    ppEl.setAttribute('role', 'dialog');
+    ppEl.setAttribute('aria-modal', 'true');
+    ppEl.setAttribute('aria-label', p.n);
+    ppEl.innerHTML =
+      '<div class="pp-top"><button type="button" class="ib" data-x="close" aria-label="Volver al catálogo">' + ICON_BACK + '</button>' +
+        '<span class="crumb">' + esc(p.cn || 'Catálogo') + '</span>' +
+        '<button type="button" class="ib" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<b class="cbadge" hidden>0</b></button></div>' +
+      '<div class="pp-in">' +
+        '<div><div class="gal"><div class="track">' + imgs.map(function (u, i) { return '<img src="' + esc(u) + '" alt="' + esc(p.n) + (imgs.length > 1 ? ', foto ' + (i + 1) : '') + '"' + (i ? ' loading="lazy"' : '') + '>'; }).join('') + '</div>' +
+          (imgs.length > 1 ? '<span class="cnt">1 / ' + imgs.length + '</span>' : '') + '</div>' +
+          (imgs.length > 1 ? '<div class="thumbs">' + imgs.map(function (u, i) { return '<button type="button" data-i="' + i + '"' + (i ? '' : ' class="on"') + ' aria-label="Ver foto ' + (i + 1) + '"><img src="' + esc(u.replace(/=w\d+$/, '=w200')) + '" alt=""></button>'; }).join('') + '</div>' : '') +
+        '</div>' +
+        '<div class="pp-body">' +
+          '<div><div class="eyebrow">Colección ' + esc(p.cn || '') + '</div><h1>' + esc(p.n) + '</h1><div class="ref">Ref. ' + ref3(p.r) + ' · Hecha a mano en Medellín</div></div>' +
+          '<div class="price">' + money(p.p) + '</div>' +
+          '<div><div class="lbl">Color</div><div class="sws">' + cols.map(function (c, i) { return '<button type="button" class="sw" data-c="' + esc(c[0]) + '" style="background:' + c[1] + '" aria-label="' + esc(c[0]) + '" aria-pressed="' + (i ? 'false' : 'true') + '"></button>'; }).join('') + '</div><div class="swn">' + esc(sel) + '</div></div>' +
+          '<div><div class="lbl">Cantidad</div><div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><span>1</span><button type="button" data-q="1" aria-label="Más">+</button></div></div>' +
+          (p.x ? '<p class="desc">' + esc(p.x) + '</p>' : '') +
+          (specs.length ? '<div class="specs">' + specs.join('') + '</div>' : '') +
+          '<div class="info"><div>' + ICON_TRUCK + '<span><b>Envíos a toda Colombia.</b> Tu pedido está listo en unos 7 días.</span></div>' +
+            '<div>' + ICON_BANK + '<span><b>Pago por transferencia</b> Bancolombia, al confirmar tu pedido por WhatsApp.</span></div>' +
+            '<div>' + ICON_HAND + '<span><b>Hecha a mano en Medellín.</b></span></div></div>' +
+          '<div class="note">Cada vela es única. Al ser hecha a mano, puede tener pequeñas variaciones de color o de acabado. Eso la hace especial.</div>' +
+          '<div class="bar"><div class="t">Total<b class="tt">' + money(p.p) + '</b></div><button type="button" class="add">Agregar al carrito</button></div>' +
+          (rel.length ? '<div><h2>También te puede gustar</h2><div class="rel">' + rel.map(function (o) { return '<a href="' + prodHref(o) + '" data-vela="' + o.r + '"><img loading="lazy" src="' + esc(o.img) + '" alt=""><span>' + esc(o.n) + '</span><em>' + money(o.p) + '</em></a>'; }).join('') + '</div></div>' : '') +
+        '</div>' +
+      '</div>';
+    X.appendChild(ppEl);
+    lockScroll(true);
+    updateBadges();
+
+    var tr = ppEl.querySelector('.track'), cnt = ppEl.querySelector('.cnt'), th = [].slice.call(ppEl.querySelectorAll('.thumbs button'));
+    tr.addEventListener('scroll', function () {
+      var i = Math.round(tr.scrollLeft / Math.max(1, tr.clientWidth));
+      if (cnt) cnt.textContent = (i + 1) + ' / ' + imgs.length;
+      th.forEach(function (b, k) { b.classList.toggle('on', k === i); });
+    }, { passive: true });
+    th.forEach(function (b) { b.addEventListener('click', function () { tr.scrollTo({ left: tr.clientWidth * Number(b.getAttribute('data-i')), behavior: 'smooth' }); }); });
+    var sws = [].slice.call(ppEl.querySelectorAll('.sw')), swn = ppEl.querySelector('.swn');
+    sws.forEach(function (b) { b.addEventListener('click', function () { sel = b.getAttribute('data-c'); sws.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); swn.textContent = sel; }); });
+    var qn = ppEl.querySelector('.qty span'), tt = ppEl.querySelector('.tt');
+    [].slice.call(ppEl.querySelectorAll('[data-q]')).forEach(function (b) { b.addEventListener('click', function () { q = Math.max(1, Math.min(99, q + Number(b.getAttribute('data-q')))); qn.textContent = q; tt.textContent = money(p.p * q); }); });
+    var add = ppEl.querySelector('.add'), addT = null;
+    add.addEventListener('click', function () {
+      addToCart(p, sel, q);
+      add.textContent = '✓ Agregada al carrito'; add.classList.add('ok');
+      clearTimeout(addT); addT = setTimeout(function () { if (add) { add.textContent = 'Agregar al carrito'; add.classList.remove('ok'); } }, 1600);
+    });
+    ppEl.scrollTop = 0;
+    if (!fromHistory) {
+      try {
+        var url = location.pathname + '?vela=' + ref3(p.r);
+        if (pushed) history.replaceState({ cdvVela: p.r }, '', url);
+        else { history.pushState({ cdvVela: p.r }, '', url); pushed = true; }
+      } catch (e) {}
+    }
+    var back = ppEl.querySelector('[data-x="close"]'); if (back) back.focus({ preventScroll: true });
+    pix('ViewContent', { content_ids: [ref3(p.r)], content_type: 'product', content_name: p.n, content_category: p.cn, value: p.p, currency: 'COP' });
+    return true;
+  }
+  function closeProduct(fromHistory) {
+    if (!ppEl) return;
+    ppEl.remove(); ppEl = null; curRef = null;
+    lockScroll(false);
+    if (!fromHistory) {
+      if (pushed) { pushed = false; try { history.back(); } catch (e) {} }
+      else { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+    }
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+    window.scrollTo(0, scrollY0);
+  }
+
+  function cartMessage() {
+    var L = cartLines();
+    return 'Hola Cielo de Velas, quiero hacer este pedido:\n' +
+      L.map(function (l) { return '• ' + l.q + ' × ' + l.p.n + ' (Ref. ' + ref3(l.p.r) + '), color ' + l.c + ': ' + money(l.p.p * l.q); }).join('\n') +
+      '\nTotal velas: ' + money(cartTotal()) + '\nEnvío: por confirmar\n(Código web CARRITO)';
+  }
+  function renderCart() {
+    if (!csEl) return;
+    var L = cartLines(), n = cartCount();
+    var hex = {}; COLORS.forEach(function (c) { hex[c[0]] = c[1]; });
+    csEl.querySelector('.cn').textContent = n ? n + (n === 1 ? ' vela' : ' velas') : '';
+    csEl.querySelector('.ls').innerHTML = L.length ? L.map(function (l, k) {
+      return '<div class="it"><a href="' + prodHref(l.p) + '" data-vela="' + l.p.r + '"><img src="' + esc(l.p.img) + '" alt=""></a><div><div class="nm">' + esc(l.p.n) + '</div>' +
+        '<div class="mt"><i style="background:' + (hex[l.c] || '#fff') + '"></i>' + esc(l.c) + ' · Ref. ' + ref3(l.p.r) + '</div>' +
+        '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Menos">−</button><span>' + l.q + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Más">+</button></div></div>' +
+        '<div class="pr">' + money(l.p.p * l.q) + '<button type="button" data-del="' + k + '">Quitar</button></div></div>';
+    }).join('') : '<div class="empty">Tu carrito está vacío.<br>Toca una vela del catálogo para elegir el color y agregarla.</div>';
+    csEl.querySelector('.tot').textContent = money(cartTotal());
+    var go = csEl.querySelector('.go');
+    go.setAttribute('href', L.length ? waLink(cartMessage()) : '#');
+    go.setAttribute('aria-disabled', L.length ? 'false' : 'true');
+    updateBadges();
+  }
+  function openCart() {
+    if (csEl) return;
+    csEl = document.createElement('div');
+    csEl.className = 'cs';
+    csEl.innerHTML = '<button type="button" class="shade" data-x="cart" aria-label="Cerrar carrito"></button>' +
+      '<div class="sheet" role="dialog" aria-modal="true" aria-label="Tu pedido"><div class="grab" aria-hidden="true"></div>' +
+      '<div class="hd"><div><h3>Tu pedido</h3><span class="sm cn"></span></div><button type="button" class="ib" data-x="cart" aria-label="Cerrar carrito">' + ICON_X + '</button></div>' +
+      '<div class="ls"></div>' +
+      '<div class="ft"><div class="row"><span>Total</span><span class="tot"></span></div>' +
+        '<div class="sm">El envío se confirma por WhatsApp según tu ciudad. Pago por transferencia Bancolombia.</div>' +
+        '<div class="mayor">Para pedidos al por mayor, <a href="' + WHOLESALE + '" target="_blank" rel="noopener" data-fb="mayor">escríbenos</a> y te damos el precio.</div>' +
+        '<a class="go" target="_blank" rel="noopener" href="#">' + ICON_WA + 'Enviar pedido por WhatsApp</a>' +
+        '<button type="button" class="kp" data-x="cart">Seguir viendo velas</button></div></div>';
+    X.appendChild(csEl);
+    lockScroll(true);
+    renderCart();
+    var c = csEl.querySelector('.hd .ib'); if (c) c.focus({ preventScroll: true });
+  }
+  function closeCart(silent) {
+    if (!csEl) return;
+    csEl.remove(); csEl = null;
+    lockScroll(false);
+    if (!silent && !ppEl) window.scrollTo(0, scrollY0);
+  }
+
+  // Clics: abrir vela, abrir carrito, cerrar, cantidades del carrito
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var t = e.target;
+    var v = t.closest && t.closest('[data-vela]');
+    if (v && (ROOT.contains(v) || X.contains(v))) {
+      e.preventDefault();
+      if (openProduct(v.getAttribute('data-vela'))) return;
+    }
+    var oc = t.closest && t.closest('[data-cart="open"]');
+    if (oc && (ROOT.contains(oc) || X.contains(oc))) { e.preventDefault(); e.stopImmediatePropagation(); openCart(); return; }
+    if (!X.contains(t)) return;
+    var xb = t.closest('[data-x]');
+    if (xb) { e.preventDefault(); if (xb.getAttribute('data-x') === 'cart') closeCart(); else closeProduct(); return; }
+    var d = t.closest('[data-d]');
+    if (d) { var l = cartLines()[Number(d.getAttribute('data-k'))]; if (l) { cart.forEach(function (c) { if (c.r === l.p.r && c.c === l.c) c.q = Math.max(1, Math.min(99, c.q + Number(d.getAttribute('data-d')))); }); saveCart(); renderCart(); } return; }
+    var del = t.closest('[data-del]');
+    if (del) { var m = cartLines()[Number(del.getAttribute('data-del'))]; if (m) { cart = cart.filter(function (c) { return !(c.r === m.p.r && c.c === m.c); }); saveCart(); renderCart(); } return; }
+    var go = t.closest('a.go');
+    if (go && go.getAttribute('aria-disabled') !== 'true') {
+      var L = cartLines();
+      pix('InitiateCheckout', { content_ids: L.map(function (x) { return ref3(x.p.r); }), content_type: 'product', num_items: cartCount(), value: cartTotal(), currency: 'COP' });
+      pix('Contact', { content_category: 'pedido_carrito', value: cartTotal(), currency: 'COP' });
+      return;
+    }
+    var my = t.closest('a[data-fb="mayor"]');
+    if (my) pix('Contact', { content_category: 'pedido_mayor' });
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (csEl) closeCart(); else if (ppEl) closeProduct();
+  });
+  window.addEventListener('popstate', function (e) {
+    var r = e.state && e.state.cdvVela;
+    if (r) { pushed = true; openProduct(r, true); }
+    else { pushed = false; closeCart(true); closeProduct(true); }
+  });
+  // Abrir directo desde un enlace compartido: cielodevelas.com/?vela=071
+  var wantVela = (location.search.match(/[?&]vela=(\d{1,4})/) || [])[1];
+  function shopAfterFeed() {
+    updateBadges();
+    if (csEl) renderCart();
+    if (ppEl && curRef && byRef(curRef) && JSON.stringify(byRef(curRef)) !== curSig) { var y = ppEl.scrollTop; openProduct(curRef, true); ppEl.scrollTop = y; }
+    if (wantVela && byRef(wantVela)) {
+      try { history.replaceState(null, '', location.pathname); history.pushState({ cdvVela: Number(wantVela) }, '', location.pathname + '?vela=' + ref3(wantVela)); pushed = true; } catch (e) {}
+      openProduct(wantVela, true);
+      wantVela = null;
+    }
+  }
+  updateBadges();
+  if (wantVela && byRef(wantVela)) shopAfterFeed();
+
   function applyFeed(items, temporada) {
     var next = normalize(items);
     if (!next.length) return;
@@ -505,6 +838,7 @@
     if (temporada) SEASON = temporada;
     ROOT.querySelector('#cdv-total').textContent = PRODUCTS.length;
     renderSeason(); renderTabs(); renderGrid();
+    shopAfterFeed();
   }
   if (FEED.indexOf('http') === 0 && window.fetch) {
     var ctrl = window.AbortController ? new AbortController() : null;
