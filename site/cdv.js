@@ -50,7 +50,19 @@
     if (/^https?:\/\//i.test(f)) return f;
     return IMG + f.replace(/\.(jpe?g|png|webp)$/i, '') + '.jpg';
   }
+  // Colecciones nuevas en la hoja (ej. "Dipping"): se agregan solas después de las conocidas.
+  function addNewCols(items) {
+    (items || []).forEach(function (i) {
+      var name = String(i.c || '').trim(), key = norm(name);
+      if (!name || COLMAP[key]) return;
+      var id = 'c-' + key.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      COLS.push({ id: id, name: name });
+      COLMAP[key] = id;
+      activeIds.push(id);
+    });
+  }
   function normalize(items) {
+    addNewCols(items);
     return (items || []).map(function (i) {
       return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String),
         x: String(i.x || ''), a: Number(i.a) || 0, w: Number(i.w) || 0, g: Number(i.g) || 0, fs: (i.fs || []).map(String).filter(String), k: (i.k || []).map(String) };
