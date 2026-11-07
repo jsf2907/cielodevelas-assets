@@ -173,8 +173,9 @@
     '#cdv .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}',
     '#cdv .card:hover .ph img{transform:scale(1.04)}',
     '#cdv .tag{position:absolute;top:12px;left:12px;background:var(--wine);color:var(--cream);font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px}',
-    '#cdv .meta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}',
-    '#cdv .meta h3{font-size:21px}',
+    '#cdv .meta{display:flex;flex-direction:column;align-items:flex-start;gap:6px;color:inherit;text-decoration:none}',
+    '#cdv .meta h3{font-size:21px;line-height:1.2;min-height:2.4em;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+    '#cdv .meta .price{font-size:16px;letter-spacing:.01em}',
     '#cdv .price{font-weight:700;color:var(--wine);white-space:nowrap}',
     '#cdv .card .btn{min-height:44px;padding:11px 14px;font-size:15px;width:100%}',
     '#cdv .tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:26px}',
@@ -238,7 +239,7 @@
     '@media (max-width:860px){#cdv footer{padding-top:44px}#cdv .ft-grid{grid-template-columns:1fr;gap:0}#cdv .ft-grid>div{padding:24px 0;border-top:1px solid rgba(231,214,202,.14)}#cdv .ft-grid>.ft-brand{padding:0 0 28px;border-top:0}#cdv .ft-brand img{width:96px}#cdv .ft-links{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}#cdv .ft-links a{min-height:44px;border-bottom:1px solid rgba(231,214,202,.08)}#cdv .fine{text-align:center;margin-top:8px;font-size:12px}}',
     '#cdv .float{position:fixed;right:18px;bottom:18px;z-index:30;display:flex;align-items:center;gap:8px;background:#1F7A4D;color:#fff;text-decoration:none;font-weight:700;padding:14px 18px;border-radius:999px;box-shadow:0 10px 28px rgba(0,0,0,.22)}',
     '@media (max-width:860px){#cdv .links{display:none}#cdv .hero-txt{padding:32px 24px}#cdv .hero-card{min-height:560px}#cdv .hero-card::after{background:linear-gradient(0deg,rgba(43,26,20,.9) 0%,rgba(43,26,20,.55) 60%,rgba(43,26,20,.15) 100%)}#cdv .brand span{display:none}#cdv .search{flex:1 1 100%}}',
-    '@media (max-width:520px){#cdv .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}#cdv .meta{flex-direction:column;gap:2px}#cdv .meta h3{font-size:17px}#cdv .card .btn{font-size:14px;padding:10px}#cdv .float span{display:none}#cdv .float{padding:15px}#cdv section.block{padding:48px 0}}',
+    '@media (max-width:520px){#cdv .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}#cdv .meta{gap:4px}#cdv .meta h3{font-size:17px}#cdv .meta .price{font-size:14px}#cdv .card .btn{font-size:14px;padding:10px}#cdv .float span{display:none}#cdv .float{padding:15px}#cdv section.block{padding:48px 0}}',
     '#cdv .sm{display:none}',
     '@media (max-width:860px){#cdv .tabs{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:6px;scrollbar-width:none}#cdv .tabs::-webkit-scrollbar{display:none}#cdv .tab{flex:0 0 auto}}',
     '@media (max-width:520px){#cdv .card .lg{display:none}#cdv .card .sm{display:inline}}',
@@ -263,8 +264,7 @@
     var top = p.top ? '<span class="tag">Más vendida</span>' : '';
     return '<article class="card">' +
       '<a class="ph" href="' + prodHref(p) + '" data-vela="' + p.r + '" aria-label="Ver ' + esc(p.n) + '">' + top + '<img loading="lazy" decoding="async" src="' + esc(p.img) + '" alt="Vela artesanal ' + esc(p.n) + '" width="640" height="800"></a>' +
-      '<div class="meta"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></div>' +
-      '<button type="button" class="cartbtn" data-vela="' + p.r + '" aria-label="Elegir color y agregar ' + esc(p.n) + ' al carrito">' + ICON_CART + '</button>' +
+      '<a class="meta" href="' + prodHref(p) + '" data-vela="' + p.r + '" tabindex="-1"><h3>' + esc(p.n) + '</h3><span class="price">' + money(p.p) + '</span></a>' +
       '</article>';
   }
 
