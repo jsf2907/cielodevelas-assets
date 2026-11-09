@@ -18,6 +18,8 @@
     ['Claudia C.', 'Local Guide', 'Velas hermosas, originales, creativas y para todos los gustos. ¡Gracias!', 'Traducida del inglés']
   ];
   var G_RATING = '5,0', G_COUNT = 449;
+  // Políticas de compra (página en blog.cielodevelas.com).
+  var POLICY_URL = 'https://blog.cielodevelas.com/politicas-de-compra/';
   // Datos en vivo: pestaña "Web" de la hoja Cielo_de_Velas_-_Ventas_y_Gastos (Apps Script, archivo Web.gs).
   var FEED = '__FEED__';
   // Copia de respaldo por si la hoja no responde.
@@ -361,7 +363,7 @@
         '<a class="ft-row" href="mailto:' + EMAIL + '"><span class="ic">' + ICON_MAIL + '</span><span class="tx"><small>Correo</small><span>' + EMAIL + '</span></span></a>' +
         '<div class="ft-row"><span class="ic">' + ICON_PIN + '</span><span class="tx"><small>Ubicación</small><span>Medellín, Colombia</span></span></div></div>' +
       '<div><h4>Síguenos</h4><div class="social"><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + 'Instagram</a><a href="' + FB + '" target="_blank" rel="noopener">' + ICON_FB + 'Facebook</a></div></div>' +
-      '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="#nosotros">Sobre nosotros</a><a href="https://blog.cielodevelas.com/">Colecciones por ocasión</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
+      '<div><h4>Explora</h4><nav class="ft-links" aria-label="Explora"><a href="#catalogo">Catálogo</a><a href="#regalos">Regalos</a><a href="#eventos">Eventos</a><a href="#pedir">Cómo pedir</a><a href="#resenas">Reseñas</a><a href="#nosotros">Sobre nosotros</a><a href="https://blog.cielodevelas.com/">Colecciones por ocasión</a><a href="' + POLICY_URL + '">Políticas de compra</a><a href="' + G_REVIEW + '" target="_blank" rel="noopener">Déjanos tu reseña</a></nav></div>' +
     '</div><p class="fine">Precios en pesos colombianos, por unidad. Para pedidos por mayor escríbenos por WhatsApp.<br>© ' + new Date().getFullYear() + ' Cielo de Velas · Medellín, Colombia</p></div></footer>' +
     '<button type="button" class="float fcart" data-cart="open" aria-label="Ver carrito">' + ICON_CART + '<span>Ver carrito</span><b class="cbadge" hidden>0</b></button>' +
     '<nav class="tabbar" aria-label="Secciones">' +
@@ -651,6 +653,7 @@
     '#cdvx .datos .ok{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;color:var(--ink);cursor:pointer}',
     '#cdvx .datos .ok input{width:20px;height:20px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--wine)}',
     '#cdvx .datos .ok.bad{color:var(--wine)}#cdvx .datos .ok a{color:var(--wine);font-weight:700}',
+    '#cdvx .ft .pol{margin:0;font-size:12.5px;line-height:1.45;color:var(--muted);text-align:center}#cdvx .ft .pol a{color:var(--wine);font-weight:700}',
     '#cdvx .err{background:#FFF3F3;border:1px solid #E7B8BC;color:var(--wine);border-radius:10px;padding:10px 12px;font-size:13px}',
     '#cdvx .pv{position:fixed;inset:0;z-index:2147483003;background:var(--cream);overflow-y:auto;-webkit-overflow-scrolling:touch}',
     '#cdvx .pv-in{max-width:720px;margin:0 auto;padding:16px max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px))}',
@@ -877,6 +880,7 @@
       '<div class="ft"><div class="row"><span>Total</span><span class="tot"></span></div>' +
         '<div class="sm">El envío se confirma por WhatsApp según tu ciudad. Pago por transferencia Bancolombia.</div>' +
         '<div class="mayor">Para pedidos al por mayor, <a href="' + WHOLESALE + '" target="_blank" rel="noopener" data-fb="mayor">escríbenos</a> y te damos el precio.</div>' +
+        '<p class="pol">Al enviar tu pedido aceptas nuestras <a href="' + POLICY_URL + '" target="_blank" rel="noopener">Políticas de compra</a>.</p>' +
         '<a class="go" target="_blank" rel="noopener" href="#">' + ICON_WA + 'Enviar pedido por WhatsApp</a>' +
         '<button type="button" class="kp" data-x="cart">Seguir viendo velas</button></div></div>';
     X.appendChild(csEl);
