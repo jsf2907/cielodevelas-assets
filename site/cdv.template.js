@@ -108,7 +108,7 @@
   var COLORS = [
     ['Cera natural', '#FFFDF8'], ['Azul cielo', '#A9D6F2'], ['Rosa', '#F2C6DE'],
     ['Verde', '#3F8F5A'], ['Lavanda', '#C9C1EC'], ['Morado', '#6D5BD0'],
-    ['Beige', '#D8C3A5'], ['Amarillo', '#FFD42A'], ['Naranja', '#F28C38']
+    ['Beige', '#D8C3A5'], ['Café', '#6F4E37'], ['Amarillo', '#FFD42A'], ['Naranja', '#F28C38']
   ];
 
   function money(n) { return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
@@ -342,7 +342,7 @@
     '<section id="pedir" class="block" style="background:var(--sand)"><div class="wrap"><div class="center"><p class="script" style="font-size:36px;color:var(--wine)">Así de fácil</p><h2 style="font-size:clamp(30px,4vw,44px)">Cómo hacer tu pedido</h2></div>' +
       '<div class="steps">' +
         '<div class="step"><b>1</b><strong>Elige tu vela</strong><span>Toca una vela, mira sus fotos y agrégala al carrito.</span></div>' +
-        '<div class="step"><b>2</b><strong>Escoge el color</strong><span>En la página de cada vela eliges uno de los 9 colores.</span></div>' +
+        '<div class="step"><b>2</b><strong>Escoge el color</strong><span>En la página de cada vela eliges uno de los 10 colores.</span></div>' +
         '<div class="step"><b>3</b><strong>Envía tu pedido</strong><span>Completa tus datos y envíanos el carrito por WhatsApp. Te confirmamos disponibilidad, envío y pago.</span></div>' +
       '</div><div class="center" style="margin-top:30px"><a class="btn btn-wine" href="#catalogo" data-col="todas">Ver catálogo</a>' +
       '<p class="askwa">¿Tienes una pregunta o un pedido especial? <a href="' + waLink('Hola Cielo de Velas, tengo una pregunta.') + '" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p></div>' +
@@ -529,7 +529,7 @@
   // Página de producto + carrito (nov 2026)
   // - Cada vela tiene su página: cielodevelas.com/?vela=001 (se puede compartir)
   // - El carrito vive en el celular del cliente (localStorage) y se envía por WhatsApp
-  // - Colores: los 9 estándar; si la columna Colores de la pestaña Web tiene una
+  // - Colores: los 10 estándar; si la columna Colores de la pestaña Web tiene una
   //   lista, solo esos (siempre dentro de los 9).
   // =========================================================================
   var CART_KEY = 'cdv_carrito_v1';
