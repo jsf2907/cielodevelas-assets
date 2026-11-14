@@ -5,7 +5,7 @@
 
   var BASE = '__BASE__';
   var IMG = BASE + 'img/';
-  var WA = '573225911307';
+  var WA = '573116170949';
   var IG = 'https://www.instagram.com/cielo.develas';
   var FB = 'https://www.facebook.com/profile.php?id=61571799055866';
   var EMAIL = 'cielodevelas@gmail.com';
@@ -359,7 +359,7 @@
     '<footer><div class="wrap"><div class="ft-grid">' +
       '<div class="ft-brand"><img src="' + IMG + 'logo-crema.png" alt="Cielo de Velas" width="110" height="105"><p>Velas artesanales hechas a mano en Medellín con materias primas naturales y certificadas.</p><em>“Por cada vela que enciendes, nace una luz en el cielo.”</em></div>' +
       '<div><h4>Contacto</h4>' +
-        '<a class="ft-row" href="' + GENERAL + '" target="_blank" rel="noopener"><span class="ic">' + ICON_WA + '</span><span class="tx"><small>WhatsApp</small><span>+57 322 591 1307</span></span></a>' +
+        '<a class="ft-row" href="' + GENERAL + '" target="_blank" rel="noopener"><span class="ic">' + ICON_WA + '</span><span class="tx"><small>WhatsApp</small><span>+57 311 617 0949</span></span></a>' +
         '<a class="ft-row" href="mailto:' + EMAIL + '"><span class="ic">' + ICON_MAIL + '</span><span class="tx"><small>Correo</small><span>' + EMAIL + '</span></span></a>' +
         '<div class="ft-row"><span class="ic">' + ICON_PIN + '</span><span class="tx"><small>Ubicación</small><span>Medellín, Colombia</span></span></div></div>' +
       '<div><h4>Síguenos</h4><div class="social"><a href="' + IG + '" target="_blank" rel="noopener">' + ICON_IG + 'Instagram</a><a href="' + FB + '" target="_blank" rel="noopener">' + ICON_FB + 'Facebook</a></div></div>' +
@@ -852,7 +852,7 @@
     pv.innerHTML = '<div class="pp-top"><button type="button" class="ib" data-x="priv" aria-label="Cerrar">' + ICON_BACK + '</button><span class="crumb">Privacidad</span><span style="width:42px"></span></div>' +
       '<div class="pv-in"><h2>Política de tratamiento de datos personales</h2>' +
       '<p>Cielo de Velas cumple la Ley 1581 de 2012 y el Decreto 1377 de 2013 de Colombia sobre protección de datos personales.</p>' +
-      '<h3>Responsable</h3><p>Cielo de Velas (Laura Foti), Medellín, Colombia. Correo: cielodevelas@gmail.com · WhatsApp: +57 322 591 1307.</p>' +
+      '<h3>Responsable</h3><p>Cielo de Velas (Laura Foti), Medellín, Colombia. Correo: cielodevelas@gmail.com · WhatsApp: +57 311 617 0949.</p>' +
       '<h3>Qué datos recogemos</h3><p>Cuando envías un pedido desde la página: tu nombre, ciudad, correo electrónico y número de WhatsApp, junto con las velas que elegiste.</p>' +
       '<h3>Para qué los usamos</h3><p>Para atender y coordinar tu pedido: confirmarlo, cotizar el envío, hacer la factura si la pides y entregarlo. También para contarte de vez en cuando sobre nuevas colecciones y temporadas; puedes pedirnos que no te escribamos más en cualquier momento.</p>' +
       '<p>No vendemos tus datos. Solo los compartimos con la transportadora cuando hay un envío, y únicamente lo necesario para entregarlo.</p>' +

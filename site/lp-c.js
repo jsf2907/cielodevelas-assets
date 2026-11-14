@@ -9,7 +9,7 @@
   var BASE = 'https://cdn.jsdelivr.net/gh/jsf2907/cielodevelas-assets@main/';
   var IMG = BASE + 'img/';
   function img(name) { return IMG + name; }
-  var WA = '573225911307';
+  var WA = '573116170949';
   var CATALOG = 'https://cielodevelas.com/';
   var IG = 'https://www.instagram.com/cielo.develas';
 

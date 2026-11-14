@@ -10,7 +10,7 @@
   var IMG = BASE + 'img/';
   function img(name) { return IMG + name; }
   var FEED = 'https://script.google.com/macros/s/AKfycbzI6w4KqoWFt6ZVrCg9TTOMEUcBpCWJFHZiKHO3z69z52catv57n7dq4bhmksfz4ljBAg/exec';
-  var WA = '573225911307';
+  var WA = '573116170949';
   var CATALOG = 'https://cielodevelas.com/';
   var IG = 'https://www.instagram.com/cielo.develas';
   var LEAD_DAYS = 7;

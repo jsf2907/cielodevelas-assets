@@ -7,7 +7,7 @@
   ROOT.setAttribute('data-ready', '1');
 
   var IMG = 'https://cdn.jsdelivr.net/gh/jsf2907/cielodevelas-assets@main/img/';
-  var WA = 'https://wa.me/573225911307?text=' + encodeURIComponent('Hola Cielo de Velas, quiero hacer un pedido.');
+  var WA = 'https://wa.me/573116170949?text=' + encodeURIComponent('Hola Cielo de Velas, quiero hacer un pedido.');
   var FOTOS = [
     ['candle-christmas.jpg', 'Velas navideñas talladas con renos'],
     ['aura.jpg', 'Velas en espiral color crema y durazno'],
