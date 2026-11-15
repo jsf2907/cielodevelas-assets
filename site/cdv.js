@@ -63,11 +63,16 @@
       activeIds.push(id);
     });
   }
+  // Paquetes con precio propio (columna Paquetes de la pestaña Web): [[1,13000],[3,37000]] -> [{n:1,p:13000},{n:3,p:37000}]
+  function packs(v) {
+    return (Array.isArray(v) ? v : []).map(function (x) { return { n: Math.round(Number(x && x[0]) || 0), p: Number(x && x[1]) || 0 }; })
+      .filter(function (x) { return x.n > 0 && x.p > 0; }).sort(function (a, b) { return a.n - b.n; });
+  }
   function normalize(items) {
     addNewCols(items);
     return (items || []).map(function (i) {
       return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String),
-        x: String(i.x || ''), a: Number(i.a) || 0, w: Number(i.w) || 0, g: Number(i.g) || 0, fs: (i.fs || []).map(String).filter(String), k: (i.k || []).map(String) };
+        x: String(i.x || ''), a: Number(i.a) || 0, w: Number(i.w) || 0, g: Number(i.g) || 0, fs: (i.fs || []).map(String).filter(String), k: (i.k || []).map(String), pk: packs(i.pk), h: Number(i.h) || 0 };
     }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
   }
   var PRODUCTS = normalize(FALLBACK);
@@ -219,6 +224,7 @@
     '#cdv .swatches{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-top:24px}',
     '#cdv .sw{display:flex;flex-direction:column;align-items:center;gap:8px;width:84px;font-size:14px;color:var(--muted)}',
     '#cdv .sw i{width:58px;height:58px;border-radius:50%;border:1px solid #DCCCC6;display:block}',
+    '@media (max-width:600px){#cdv .swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px 6px}#cdv .sw{width:auto;font-size:12px;line-height:1.25;text-align:center;gap:6px}#cdv .sw i{width:46px;height:46px}}',
     '#cdv .center{text-align:center;display:flex;flex-direction:column;align-items:center}',
     '#cdv .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:28px}',
     '#cdv .step{background:#fff;border:1px solid #EFE0CF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:10px}',
@@ -530,7 +536,11 @@
   // - Cada vela tiene su página: cielodevelas.com/?vela=001 (se puede compartir)
   // - El carrito vive en el celular del cliente (localStorage) y se envía por WhatsApp
   // - Colores: los 10 estándar; si la columna Colores de la pestaña Web tiene una
-  //   lista, solo esos (siempre dentro de los 9).
+  //   lista, solo esos (siempre dentro de los 10).
+  // - Paquetes (columna Paquetes de la pestaña Web, ej. 1:13000, 3:37000): la vela muestra
+  //   tarjetas de paquete con su precio, cantidad de paquetes y un color por paquete.
+  //   Cada paquete + color es una línea del carrito. Sin la columna, la vela es normal.
+  // - Duración (columna Duración (h)): se muestra junto a Alto / Ancho / Cera.
   // =========================================================================
   var CART_KEY = 'cdv_carrito_v1';
   var WHOLESALE = waLink('Hola Cielo de Velas, quiero hacer un pedido al por mayor. ¿Me pueden dar el precio? Velas y cantidades: ');
@@ -551,17 +561,25 @@
   try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]') || []; } catch (e) { cart = []; }
   cart = cart.filter(function (l) { return l && l.r && l.q > 0; });
   function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+  // Paquetes: n = velas por paquete (1 = vela suelta). El precio del paquete sale de la columna Paquetes;
+  // si ese paquete ya no existe en la hoja, se cobra n × precio unitario.
+  function packN(n) { n = Math.round(Number(n) || 1); return n > 1 ? n : 1; }
+  function packOf(p, n) { for (var i = 0; i < p.pk.length; i++) if (p.pk[i].n === n) return p.pk[i]; return null; }
+  function linePrice(p, n) { var k = packOf(p, n); return k ? k.p : p.p * n; }
+  function packTxt(n) { return n > 1 ? 'paquete de ' + n + ' velas' : ''; }
+  function sameLine(c, l) { return c.r === l.p.r && c.c === l.c && packN(c.n) === l.n; }
   function cartLines() {
-    return cart.map(function (l) { var p = byRef(l.r); return p ? { p: p, c: l.c, q: l.q } : null; }).filter(Boolean);
+    return cart.map(function (l) { var p = byRef(l.r), n = packN(l.n); return p ? { p: p, c: l.c, q: l.q, n: n, u: linePrice(p, n) } : null; }).filter(Boolean);
   }
-  function cartCount() { return cartLines().reduce(function (s, l) { return s + l.q; }, 0); }
-  function cartTotal() { return cartLines().reduce(function (s, l) { return s + l.q * l.p.p; }, 0); }
-  function addToCart(p, color, q) {
+  // Cuenta velas (un paquete de 5 cuenta 5)
+  function cartCount() { return cartLines().reduce(function (s, l) { return s + l.q * l.n; }, 0); }
+  function cartTotal() { return cartLines().reduce(function (s, l) { return s + l.q * l.u; }, 0); }
+  function addToCart(p, color, q, n) {
+    n = packN(n);
     var hit = null;
-    cart.forEach(function (l) { if (l.r === p.r && l.c === color) hit = l; });
-    if (hit) hit.q += q; else cart.push({ r: p.r, c: color, q: q });
+    cart.forEach(function (l) { if (l.r === p.r && l.c === color && packN(l.n) === n) hit = l; });
+    if (hit) hit.q += q; else { var nl = { r: p.r, c: color, q: q }; if (n > 1) nl.n = n; cart.push(nl); }
     saveCart(); updateBadges();
-    pix('AddToCart', { content_ids: [ref3(p.r)], content_type: 'product', content_name: p.n, value: p.p * q, currency: 'COP' });
   }
   function updateBadges() {
     var n = cartCount();
@@ -603,6 +621,15 @@
     '#cdvx .sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #D9C7B3;padding:0}',
     '#cdvx .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--wine)}',
     '#cdvx .swn{font-size:14px;margin-top:8px;font-weight:600}',
+    '#cdvx .crows{display:flex;flex-direction:column;gap:16px}',
+    '#cdvx .pks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
+    '#cdvx .pk{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:86px;padding:12px 14px;border:1px solid #D9C7B3;border-radius:14px;background:#fff;text-align:left;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}',
+    '#cdvx .pk b{font-size:14px;font-weight:700;line-height:1.2}',
+    '#cdvx .pk span{font-family:"Fraunces",Georgia,serif;font-size:20px;font-weight:600;color:var(--wine);font-variant-numeric:tabular-nums;line-height:1.2}',
+    '#cdvx .pk em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--pine);background:#E6EFE8;border-radius:10px;padding:2px 8px;margin-top:4px}',
+    '#cdvx .pk[aria-pressed="true"]{border-color:var(--wine);box-shadow:0 0 0 1px var(--wine);background:#FFF4EE}',
+    '#cdvx .pk:focus-visible{outline:3px solid var(--gold);outline-offset:2px}',
+    '#cdvx .tip{margin:10px 0 0;font-size:13px;line-height:1.45;color:var(--pine);font-weight:600}',
     '#cdvx .qty{display:inline-flex;align-items:center;border:1px solid #D9C7B3;border-radius:28px;background:#fff}',
     '#cdvx .qty button{width:44px;height:44px;font-size:20px;background:none;border:0}#cdvx .qty span{min-width:28px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}',
     '#cdvx .desc{margin:0;font-size:15.5px;line-height:1.65;max-width:62ch}',
@@ -685,11 +712,25 @@
     curRef = p.r; curSig = JSON.stringify(p);
     var imgs = (p.fs.length ? p.fs.map(imgUrl) : [p.img]).map(bigImg);
     var cols = colorsFor(p);
-    var sel = cols[0][0], q = 1;
+    var q = 1;
+    // Paquetes (solo velas con la columna Paquetes): pn = velas del paquete elegido. Un color por paquete.
+    var hasPk = p.pk.length > 0;
+    var pn = hasPk ? p.pk[0].n : 1;
+    var one = hasPk && packOf(p, 1) ? packOf(p, 1).p : p.p;
+    var perUnit = hasPk && cols.length > 1;
+    var maxQ = hasPk ? 10 : 99;
+    var sels = [cols[0][0]];
     var specs = [];
     if (p.a) specs.push('<div><b>' + cm(p.a) + '</b><small>Alto</small></div>');
     if (p.w) specs.push('<div><b>' + cm(p.w) + '</b><small>Ancho</small></div>');
     if (p.g) specs.push('<div><b>' + p.g + ' g</b><small>Cera</small></div>');
+    if (p.h) specs.push('<div><b>' + String(p.h).replace('.', ',') + ' h</b><small>Duración aprox.</small></div>');
+    var pkHtml = hasPk ? '<div><div class="lbl">Elige tu paquete</div><div class="pks">' + p.pk.map(function (k, i) {
+      var save = one * k.n - k.p;
+      return '<button type="button" class="pk" data-n="' + k.n + '" aria-pressed="' + (i ? 'false' : 'true') + '"><b>' + k.n + (k.n === 1 ? ' vela' : ' velas') + '</b><span>' + money(k.p) + '</span>' + (save > 0 ? '<em>Ahorra ' + money(save) + '</em>' : '') + '</button>';
+    }).join('') + '</div></div>' : '';
+    var colHtml = '<div class="crows"></div>';
+    var qtyHtml = '<div><div class="lbl ql">Cantidad</div><div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><span>1</span><button type="button" data-q="1" aria-label="Más">+</button></div>' + (hasPk ? '<p class="tip" hidden></p>' : '') + '</div>';
     var rel = PRODUCTS.filter(function (o) { return o.c === p.c && o.r !== p.r; }).slice(0, 8);
     ppEl = document.createElement('div');
     ppEl.className = 'pp';
@@ -707,9 +748,8 @@
         '</div>' +
         '<div class="pp-body">' +
           '<div><div class="eyebrow">Colección ' + esc(p.cn || '') + '</div><h1>' + esc(p.n) + '</h1><div class="ref">Ref. ' + ref3(p.r) + ' · Hecha a mano en Medellín</div></div>' +
-          '<div class="price">' + money(p.p) + '</div>' +
-          '<div><div class="lbl">Color</div><div class="sws">' + cols.map(function (c, i) { return '<button type="button" class="sw" data-c="' + esc(c[0]) + '" style="background:' + c[1] + '" aria-label="' + esc(c[0]) + '" aria-pressed="' + (i ? 'false' : 'true') + '"></button>'; }).join('') + '</div><div class="swn">' + esc(sel) + '</div></div>' +
-          '<div><div class="lbl">Cantidad</div><div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><span>1</span><button type="button" data-q="1" aria-label="Más">+</button></div></div>' +
+          '<div class="price">' + money(linePrice(p, pn)) + '</div>' +
+          (hasPk ? pkHtml + qtyHtml + colHtml : colHtml + qtyHtml) +
           (p.x ? '<p class="desc">' + esc(p.x) + '</p>' : '') +
           (specs.length ? '<div class="specs">' + specs.join('') + '</div>' : '') +
           '<div class="info"><div>' + ICON_TRUCK + '<span><b>Envíos a toda Colombia.</b> Tu pedido está listo en unos 7 días.</span></div>' +
@@ -717,7 +757,7 @@
             '<div>' + ICON_HAND + '<span><b>Hecha a mano en Medellín.</b></span></div></div>' +
           '<div class="note"><p>Nuestras velas están elaboradas artesanalmente con cera de origen vegetal, reflejando nuestro compromiso con una producción más consciente con el medio ambiente.</p>' +
             '<p>Cada vela es hecha y decorada a mano en nuestro taller en Medellín. Por su proceso artesanal, pueden presentar ligeras variaciones en los colores y diseños, haciendo de cada pieza una creación única y especial.</p></div>' +
-          '<div class="bar"><div class="t">Total<b class="tt">' + money(p.p) + '</b></div><button type="button" class="add">Agregar al carrito</button></div>' +
+          '<div class="bar"><div class="t">Total<b class="tt">' + money(linePrice(p, pn)) + '</b></div><button type="button" class="add">Agregar al carrito</button></div>' +
           (rel.length ? '<div><h2>También te puede gustar</h2><div class="rel">' + rel.map(function (o) { return '<a href="' + prodHref(o) + '" data-vela="' + o.r + '"><img loading="lazy" src="' + esc(o.img) + '" alt=""><span>' + esc(o.n) + '</span><em>' + money(o.p) + '</em></a>'; }).join('') + '</div></div>' : '') +
         '</div>' +
       '</div>';
@@ -740,14 +780,55 @@
       th.forEach(function (b, k) { b.classList.toggle('on', k === i); });
     }, { passive: true });
     th.forEach(function (b) { b.addEventListener('click', function () { tr.scrollTo({ left: tr.clientWidth * Number(b.getAttribute('data-i')), behavior: 'smooth' }); }); });
-    var sws = [].slice.call(ppEl.querySelectorAll('.sw')), swn = ppEl.querySelector('.swn');
-    sws.forEach(function (b) { b.addEventListener('click', function () { sel = b.getAttribute('data-c'); sws.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); swn.textContent = sel; }); });
-    var qn = ppEl.querySelector('.qty span'), tt = ppEl.querySelector('.tt');
-    [].slice.call(ppEl.querySelectorAll('[data-q]')).forEach(function (b) { b.addEventListener('click', function () { q = Math.max(1, Math.min(99, q + Number(b.getAttribute('data-q')))); qn.textContent = q; tt.textContent = money(p.p * q); }); });
+    var crows = ppEl.querySelector('.crows'), qn = ppEl.querySelector('.qty span'), tt = ppEl.querySelector('.tt');
+    var prEl = ppEl.querySelector('.price'), ql = ppEl.querySelector('.ql'), tip = ppEl.querySelector('.tip');
+    // Colores: uno para todo; en velas con paquetes, uno por paquete (o por vela suelta) según la cantidad
+    function drawColors() {
+      var rows = perUnit ? q : 1;
+      while (sels.length < rows) sels.push(sels[sels.length - 1]);
+      sels.length = rows;
+      var word = pn > 1 ? ' del paquete ' : ' de la vela ';
+      crows.innerHTML = sels.map(function (s, i) {
+        return '<div><div class="lbl">Color' + (rows > 1 ? word + (i + 1) : '') + '</div><div class="sws">' + cols.map(function (c) { return '<button type="button" class="sw" data-row="' + i + '" data-c="' + esc(c[0]) + '" style="background:' + c[1] + '" aria-label="' + esc(c[0]) + '" aria-pressed="' + (c[0] === s ? 'true' : 'false') + '"></button>'; }).join('') + '</div><div class="swn">' + esc(s) + '</div></div>';
+      }).join('');
+    }
+    function refresh() {
+      var u = linePrice(p, pn);
+      qn.textContent = q; tt.textContent = money(u * q);
+      if (!hasPk) return;
+      prEl.textContent = money(u);
+      ql.textContent = pn > 1 ? 'Cantidad de paquetes' : 'Cantidad';
+      // Aviso cuando las mismas velas salen más baratas en un paquete más grande
+      var better = q > 1 ? packOf(p, pn * q) : null;
+      var show = !!better && better.p < u * q;
+      tip.hidden = !show;
+      if (show) tip.textContent = 'El paquete de ' + better.n + ' velas te sale en ' + money(better.p) + (perUnit ? ' (un solo color)' : '') + ': ahorras ' + money(u * q - better.p) + '.';
+    }
+    drawColors();
+    crows.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.sw') : null;
+      if (!b) return;
+      sels[Number(b.getAttribute('data-row'))] = b.getAttribute('data-c');
+      var row = b.parentNode.parentNode;
+      [].slice.call(row.querySelectorAll('.sw')).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      row.querySelector('.swn').textContent = b.getAttribute('data-c');
+    });
+    var pks = [].slice.call(ppEl.querySelectorAll('.pk'));
+    pks.forEach(function (b) { b.addEventListener('click', function () {
+      pn = Number(b.getAttribute('data-n'));
+      pks.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      drawColors(); refresh();
+    }); });
+    [].slice.call(ppEl.querySelectorAll('[data-q]')).forEach(function (b) { b.addEventListener('click', function () {
+      q = Math.max(1, Math.min(maxQ, q + Number(b.getAttribute('data-q'))));
+      if (perUnit) drawColors();
+      refresh();
+    }); });
     var add = ppEl.querySelector('.add'), addT = null;
     add.addEventListener('click', function () {
-      addToCart(p, sel, q);
-      add.textContent = '✓ Agregada al carrito'; add.classList.add('ok');
+      if (sels.length > 1) sels.forEach(function (c) { addToCart(p, c, 1, pn); }); else addToCart(p, sels[0], q, pn);
+      pix('AddToCart', { content_ids: [ref3(p.r)], content_type: 'product', content_name: p.n, value: linePrice(p, pn) * q, currency: 'COP' });
+      add.textContent = pn > 1 ? '✓ Agregado al carrito' : '✓ Agregada al carrito'; add.classList.add('ok');
       clearTimeout(addT); addT = setTimeout(function () { if (add) { add.textContent = 'Agregar al carrito'; add.classList.remove('ok'); } }, 1600);
     });
     ppEl.scrollTop = 0;
@@ -779,7 +860,7 @@
     var d = datos;
     return 'Hola Cielo de Velas, quiero hacer este pedido:\n' +
       (d.nombre ? 'Nombre: ' + d.nombre + '\nCiudad: ' + d.ciudad + '\nCorreo: ' + d.email + '\nWhatsApp: ' + d.whatsapp + '\n\n' : '') +
-      L.map(function (l) { return '• ' + l.q + ' × ' + l.p.n + ' (Ref. ' + ref3(l.p.r) + '), color ' + l.c + ': ' + money(l.p.p * l.q); }).join('\n') +
+      L.map(function (l) { return '• ' + l.q + ' × ' + l.p.n + (l.n > 1 ? ', ' + packTxt(l.n) : '') + ' (Ref. ' + ref3(l.p.r) + '), color ' + l.c + ': ' + money(l.u * l.q); }).join('\n') +
       '\nTotal velas: ' + money(cartTotal()) + '\nEnvío: por confirmar\n(Código web CARRITO)';
   }
   function renderCart() {
@@ -789,9 +870,9 @@
     csEl.querySelector('.cn').textContent = n ? n + (n === 1 ? ' vela' : ' velas') : '';
     csEl.querySelector('.ls').innerHTML = L.length ? L.map(function (l, k) {
       return '<div class="it"><a href="' + prodHref(l.p) + '" data-vela="' + l.p.r + '"><img src="' + esc(l.p.img) + '" alt=""></a><div><div class="nm">' + esc(l.p.n) + '</div>' +
-        '<div class="mt"><i style="background:' + (hex[l.c] || '#fff') + '"></i>' + esc(l.c) + ' · Ref. ' + ref3(l.p.r) + '</div>' +
+        '<div class="mt"><i style="background:' + (hex[l.c] || '#fff') + '"></i>' + esc(l.c) + (l.n > 1 ? ' · Paquete de ' + l.n : '') + ' · Ref. ' + ref3(l.p.r) + '</div>' +
         '<div class="qty"><button type="button" data-k="' + k + '" data-d="-1" aria-label="Menos">−</button><span>' + l.q + '</span><button type="button" data-k="' + k + '" data-d="1" aria-label="Más">+</button></div></div>' +
-        '<div class="pr">' + money(l.p.p * l.q) + '<button type="button" data-del="' + k + '">Quitar</button></div></div>';
+        '<div class="pr">' + money(l.u * l.q) + '<button type="button" data-del="' + k + '">Quitar</button></div></div>';
     }).join('') : '<div class="empty">Tu carrito está vacío.<br>Toca una vela del catálogo para elegir el color y agregarla.</div>';
     csEl.querySelector('.tot').textContent = money(cartTotal());
     var go = csEl.querySelector('.go');
@@ -838,7 +919,7 @@
   }
   function enviarDatos() {
     var payload = JSON.stringify({ nombre: datos.nombre, ciudad: datos.ciudad, email: datos.email, whatsapp: datos.whatsapp, acepta: true,
-      items: cartLines().map(function (l) { return { r: l.p.r, n: l.p.n, c: l.c, q: l.q, p: l.p.p }; }) });
+      items: cartLines().map(function (l) { return { r: l.p.r, n: l.p.n + (l.n > 1 ? ', ' + packTxt(l.n) : ''), c: l.c, q: l.q, p: l.u, u: l.n }; }) });
     if (FEED.indexOf('http') !== 0) return;
     try {
       if (navigator.sendBeacon && navigator.sendBeacon(FEED, new Blob([payload], { type: 'text/plain;charset=utf-8' }))) return;
@@ -914,9 +995,9 @@
     var xb = t.closest('[data-x]');
     if (xb) { e.preventDefault(); var w = xb.getAttribute('data-x'); if (w === 'priv') { var pv = X.querySelector('.pv'); if (pv) pv.remove(); } else if (w === 'cart') closeCart(); else closeProduct(); return; }
     var d = t.closest('[data-d]');
-    if (d) { var l = cartLines()[Number(d.getAttribute('data-k'))]; if (l) { cart.forEach(function (c) { if (c.r === l.p.r && c.c === l.c) c.q = Math.max(1, Math.min(99, c.q + Number(d.getAttribute('data-d')))); }); saveCart(); renderCart(); } return; }
+    if (d) { var l = cartLines()[Number(d.getAttribute('data-k'))]; if (l) { cart.forEach(function (c) { if (sameLine(c, l)) c.q = Math.max(1, Math.min(99, c.q + Number(d.getAttribute('data-d')))); }); saveCart(); renderCart(); } return; }
     var del = t.closest('[data-del]');
-    if (del) { var m = cartLines()[Number(del.getAttribute('data-del'))]; if (m) { cart = cart.filter(function (c) { return !(c.r === m.p.r && c.c === m.c); }); saveCart(); renderCart(); } return; }
+    if (del) { var m = cartLines()[Number(del.getAttribute('data-del'))]; if (m) { cart = cart.filter(function (c) { return !sameLine(c, m); }); saveCart(); renderCart(); } return; }
     var go = t.closest('a.go');
     if (go && go.getAttribute('aria-disabled') !== 'true') {
       readDatos();
