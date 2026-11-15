@@ -52,15 +52,27 @@
     if (/^https?:\/\//i.test(f)) return f;
     return IMG + f.replace(/\.(jpe?g|png|webp)$/i, '') + '.jpg';
   }
+  // Una vela puede estar en varias colecciones (columna Colección de la pestaña Web, selección múltiple).
+  // El feed manda la principal en "c" y, si hay más de una, la lista completa en "cs". La principal va primero.
+  function colNames(i) {
+    var out = [], seen = {};
+    [i.c].concat(Array.isArray(i.cs) ? i.cs : []).forEach(function (x) {
+      var name = String(x || '').trim(), key = norm(name);
+      if (name && !seen[key]) { seen[key] = true; out.push(name); }
+    });
+    return out;
+  }
   // Colecciones nuevas en la hoja (ej. "Dipping"): se agregan solas después de las conocidas.
   function addNewCols(items) {
     (items || []).forEach(function (i) {
-      var name = String(i.c || '').trim(), key = norm(name);
-      if (!name || COLMAP[key]) return;
-      var id = 'c-' + key.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      COLS.push({ id: id, name: name });
-      COLMAP[key] = id;
-      activeIds.push(id);
+      colNames(i).forEach(function (name) {
+        var key = norm(name);
+        if (COLMAP[key]) return;
+        var id = 'c-' + key.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        COLS.push({ id: id, name: name });
+        COLMAP[key] = id;
+        activeIds.push(id);
+      });
     });
   }
   // Paquetes con precio propio (columna Paquetes de la pestaña Web): [[1,13000],[3,37000]] -> [{n:1,p:13000},{n:3,p:37000}]
@@ -71,7 +83,11 @@
   function normalize(items) {
     addNewCols(items);
     return (items || []).map(function (i) {
-      return { n: String(i.n), r: Number(i.r) || 0, cn: String(i.c || ''), c: COLMAP[norm(String(i.c || ''))] || 'otros', p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String),
+      var cns = colNames(i), cc = [];
+      cns.forEach(function (name) { var id = COLMAP[norm(name)] || 'otros'; if (cc.indexOf(id) < 0) cc.push(id); });
+      if (!cc.length) cc.push('otros');
+      // cn / c = colección principal (etiqueta de la página, Meta). cns / cc = todas (filtros, temporadas).
+      return { n: String(i.n), r: Number(i.r) || 0, cn: cns[0] || '', c: cc[0], cns: cns, cc: cc, p: Number(i.p), img: imgUrl(i.f), top: !!i.t, feat: !!i.d, s: (i.s || []).map(String),
         x: String(i.x || ''), a: Number(i.a) || 0, w: Number(i.w) || 0, g: Number(i.g) || 0, fs: (i.fs || []).map(String).filter(String), k: (i.k || []).map(String), pk: packs(i.pk), h: Number(i.h) || 0 };
     }).filter(function (p) { return p.n && p.p > 0 && activeIds.indexOf(p.c) > -1; });
   }
@@ -100,7 +116,7 @@
   function dateTxt(f) { var p = String(f || '').split('-').map(Number); return p.length === 3 ? p[2] + ' de ' + MESES[p[1] - 1] : ''; }
   function inSeason(p, t) {
     if (!t) return false;
-    if (t.coleccion && norm(p.cn) === norm(t.coleccion)) return true;
+    if (t.coleccion) { var tc = norm(t.coleccion); if (p.cns.some(function (x) { return norm(x) === tc; })) return true; }
     if ((t.refs || []).indexOf(p.r) > -1) return true;
     var n = norm(t.nombre || '');
     return p.s.some(function (x) { return norm(x) === n; });
@@ -394,7 +410,7 @@
   function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function renderTabs() {
     var used = {};
-    PRODUCTS.forEach(function (p) { used[p.c] = true; });
+    PRODUCTS.forEach(function (p) { p.cc.forEach(function (id) { used[id] = true; }); });
     var seasonTabs = [];
     var t = current(), nx = nextSeason();
     if (seasonList(t).length) seasonTabs.push({ id: 'temp:actual', name: shortName(t), season: true });
@@ -413,7 +429,7 @@
       if (q) return norm(p.n).indexOf(q) > -1;
       if (state.col === 'temp:actual') return inSeason(p, current());
       if (state.col === 'temp:siguiente') return inSeason(p, nextSeason());
-      return state.col === 'todas' || p.c === state.col;
+      return state.col === 'todas' || p.cc.indexOf(state.col) > -1;
     });
     countEl.textContent = list.length + (list.length === 1 ? ' vela' : ' velas');
     gridEl.innerHTML = list.length ? list.map(card).join('') :
@@ -731,7 +747,9 @@
     }).join('') + '</div></div>' : '';
     var colHtml = '<div class="crows"></div>';
     var qtyHtml = '<div><div class="lbl ql">Cantidad</div><div class="qty"><button type="button" data-q="-1" aria-label="Menos">−</button><span>1</span><button type="button" data-q="1" aria-label="Más">+</button></div>' + (hasPk ? '<p class="tip" hidden></p>' : '') + '</div>';
-    var rel = PRODUCTS.filter(function (o) { return o.c === p.c && o.r !== p.r; }).slice(0, 8);
+    // Misma colección principal primero; después las que comparten otra colección
+    var rel = PRODUCTS.filter(function (o) { return o.c === p.c && o.r !== p.r; })
+      .concat(PRODUCTS.filter(function (o) { return o.c !== p.c && o.r !== p.r && o.cc.some(function (x) { return p.cc.indexOf(x) > -1; }); })).slice(0, 8);
     ppEl = document.createElement('div');
     ppEl.className = 'pp';
     ppEl.setAttribute('role', 'dialog');
